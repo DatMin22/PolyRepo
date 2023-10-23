@@ -1,0 +1,11 @@
+.header {
+    /* padding: 1rem; */
+    background-color: #23424E;
+    height: max-content;
+    display: flex;
+    /* position: fixed; */
+    width: 100%;
+}
+.logo{
+    width: 9rem;
+}
