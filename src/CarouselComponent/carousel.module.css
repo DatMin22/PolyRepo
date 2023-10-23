@@ -1,9 +1,7 @@
 .carousel {
-    background: url(./images/background-carousel.jpg) no-repeat center/cover;
+    background: url(../../public/images/background-carousel.jpg) no-repeat center/cover;
     height: 400px;
-    /* margin-top: 110px; */
-    /* position: absolute; */
-    /* top: 0; */
+/
 }
 .inpSearch {
     border-radius: 40px;
