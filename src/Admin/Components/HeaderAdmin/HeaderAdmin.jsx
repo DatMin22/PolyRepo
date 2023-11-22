@@ -14,7 +14,7 @@ export const HeaderAdmin = () => {
                             </svg>
                         </button>
                         <Link to={'/'} className="flex ms-2 md:me-24">
-                            <img src="./images/logoPolyRepo.png" className="h-8 me-3" alt="FlowBite Logo" />
+                            <img src="./images/logoPolyRepo.png" className="h-8 me-3" alt="PolyRepo Logo" />
                         </Link>
                     </div>
                     <h1 className='text-white text-xl' >Admin Dashboard</h1>

@@ -13,6 +13,13 @@ import { PostForm } from './Post/PostForm'
 import { HeaderDemo } from './Component/Header/HeaderDemo'
 import AdminLayout from './layouts/AdminLayout/AdminLayout'
 import { PostManagement } from './Admin/Components/PostManagement/PostManagement'
+import { DemoLike } from './Component/DemoLike'
+import { LikeManagement } from './Admin/Components/LikeManagement/LikeManagement'
+import { RoleManagement } from './Admin/Components/RoleManagement/RoleManagement'
+import { ShareManagement } from './Admin/Components/ShareManagement/ShareManagement'
+import { CommentManagement } from './Admin/Components/CommentManagement/CommentManagement'
+import { CategoryManagement } from './Admin/Components/CategoryManagement/CategoryManagement'
+import { Dashboards } from './Admin/Components/Dashboards/Dashboards'
 function App() {
 
   // login()
@@ -39,6 +46,7 @@ function App() {
 
           {/* <Route path='postList' element={<PostList />} /> */}
           <Route path='uploadPost' element={<PostForm />} />
+          <Route path='/demolike' element={<DemoLike />} />
 
 
           {/* Dynamic segments */}
@@ -46,9 +54,14 @@ function App() {
         </Route>
 
         <Route path='admin' element={<AdminLayout />}>
-          <Route index element={<User />} />
-          <Route path='/admin/post-management' element={<PostManagement />} />
-          <Route path='/admin/user-management' element={<User />} />
+          <Route index element={<Dashboards />} />
+          <Route path='post-management' element={<PostManagement />} />
+          <Route path='user-management' element={<User />} />
+          <Route path='comment-management' element={<CommentManagement />} />
+          <Route path='like-management' element={<LikeManagement />} />
+          <Route path='role-management' element={<RoleManagement />} />
+          <Route path='share-management' element={<ShareManagement />} />
+          <Route path='category-management' element={<CategoryManagement />} />
         </Route>
       </Routes>
 

@@ -1,17 +1,20 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import axios from "axios";
+import * as apiServices from '../../Services/apiServices'
+
 const initialState = {
     isLoading: false,
     postList: [],
     commentListByPostID: [],
-    fileUpload: ''
+    fileUpload: '',
+    postEdit: undefined
 }
 
 const baseURL = 'http://localhost:8080'
 // dungf reduxthunk
 export const getListPost = createAsyncThunk("posts/getAll", async () => {
     try {
-        const response = await axios.get(`${baseURL}/posts/getAll`)
+        const response = await apiServices.get(`/posts/getAll`)
         console.log("response", response)
         return response.data.data
     } catch (error) {
@@ -80,6 +83,11 @@ const postSlice = createSlice({
         },
         setLoading: (state, { payload }) => {
             state.isLoading = payload
+        },
+        setPostEdit: (state, { payload }) => {
+            // console.log('payload: ', payload)
+            state.postEdit = payload
+
         },
 
 

@@ -73,7 +73,12 @@ export const PostForm = () => {
         apiKey: "free" // Get production API keys from Bytescale
     });
     const options = { multi: true };
+    useEffect(() => {
+        // disPatch(getListPost())
+        disPatch(getAllCategory())
+        // fetch animals data on component mount
 
+    }, [])
     return (
         <div>
 

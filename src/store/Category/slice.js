@@ -4,7 +4,8 @@ import axios from "axios"
 
 
 const initialState = {
-    listCategory: []
+    listCategory: [],
+    cateEdit: undefined
 }
 
 const baseURL = 'http://localhost:8080'
@@ -12,7 +13,7 @@ const baseURL = 'http://localhost:8080'
 export const getAllCategory = createAsyncThunk("getAllCategory", async () => {
     try {
         const response = await apiServices.get(
-            `${baseURL}/cate/getAll`,
+            '/cate/getAll',
 
         )
         console.log("response", response)
@@ -21,20 +22,19 @@ export const getAllCategory = createAsyncThunk("getAllCategory", async () => {
         console.log("error", error);
     }
 })
-export const getUserByEmail = createAsyncThunk("getUserByEmail", async (email) => {
+export const addCategory = createAsyncThunk("addCategory", async (cate) => {
     try {
-        const response = await axios.get(
-            `${baseURL}/user/email/${email}`,
-
-            { 'content-type': 'application/x-www-form-urlencoded' }
+        const response = await axios.post(
+            'http://localhost:8080/cate/add',
+            cate
         )
-        // alert('getUserByEmail thành công.')
-        // console.log("response", response.data.data)
+        console.log("response", response)
         return response.data.data
     } catch (error) {
         console.log("error", error);
     }
 })
+
 const categorySlice = createSlice({
     name: 'Category',
     initialState,
@@ -57,6 +57,9 @@ const categorySlice = createSlice({
 
                 })
         },
+        setCateEdit: (state, { payload }) => {
+            state.cateEdit = payload
+        }
     },
     extraReducers(builder) {
         builder.addCase(getAllCategory.pending, (state) => {
@@ -72,6 +75,17 @@ const categorySlice = createSlice({
             // alert("lỗi");
         })
 
+
+        // *ADD
+        builder.addCase(addCategory.pending, (state) => {
+            // alert('sfsf')
+        })
+        builder.addCase(addCategory.fulfilled, (state, { payload }) => {
+            console.log('payload: ', payload);
+            state.listCategory.push(payload)
+
+
+        })
 
     }
 

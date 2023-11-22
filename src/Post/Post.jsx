@@ -30,7 +30,7 @@ export const Post = () => {
   };
   useEffect(() => {
     disPatch(getListPost())
-    disPatch(getAllCategory())
+    // disPatch(getAllCategory())
     // fetch animals data on component mount
 
   }, [])

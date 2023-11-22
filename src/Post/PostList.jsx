@@ -2,10 +2,21 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserByEmail } from '../store/Auth/slice'
 import { addComment, getCommentByPostID } from '../store/Post/slice'
+import classnames from "classnames"
+
 // import jwt from 'jsonwebtoken'
 
 export const PostList = () => {
+    const [isLiked, setIsLiked] = useState(false)
 
+    const classNames = classnames({
+        "like-button": true,
+        "liked": isLiked,
+    });
+
+    const handleLike = () => {
+        setIsLiked(!isLiked);
+    };
 
 
     const { postList, commentListByPostID } = useSelector(state => state.post)
@@ -25,6 +36,7 @@ export const PostList = () => {
     const disPatch = useDispatch()
     const handleComment = () => {
 
+        
         disPatch(addComment({
             content: commentContent,
             commentstatus: "true",
@@ -116,7 +128,7 @@ export const PostList = () => {
                                             return (
                                                 <div key={comment.id}
                                                     className='d-flex mt-3'
-                                                    >
+                                                >
 
                                                     <p>
                                                         <span style={{
@@ -152,7 +164,11 @@ export const PostList = () => {
                                     <i className='bx bx-recycle'></i></span>
                                 <div className="d-flex align-items-center justify-content-between">
                                     <span className='h4'>Bạn nghĩ gì?</span>
-                                    <span className='h4'><i className='bx bx-heart'></i></span>
+                                    <span className='h1'>
+                                        <span className={classNames} onClick={handleLike}>
+                                        <i class='bx bxs-heart bx-burst' ></i>
+                                        {/* <i class='bx bx-heart-circle bx-burst' ></i> */}
+                                    </span></span>
                                 </div>
                                 <div className="d-flex align-items-center justify-content-between">
 
