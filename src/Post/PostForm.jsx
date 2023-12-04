@@ -7,16 +7,29 @@ import { useEffect } from 'react';
 import { getUserByEmail } from '../store/Auth/slice';
 import { HeaderDemo } from '../Component/Header/HeaderDemo';
 import { categoryActions, getAllCategory } from '../store/Category/slice';
+import { Grid, Stack, TextField, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { useForm, Controller } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { LoadingButton } from "@mui/lab";
+const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+});
 export const PostForm = () => {
     const { fileUpload } = useSelector(state => state.post)
     const { userLogin, isLogin, userIslogin } = useSelector(state => state.auth)
-    console.log('userIslogin: ', userIslogin);
     const { listCategory } = useSelector(state => state.category)
-    // console.log('listCategory: ', listCategory)
-    // console.log('userLogin: ', userLogin);
-    // console.log('fileUpload: ', fileUpload);
-    const [file, setFile] = useState('')
-    // console.log('file: ', file);
+
     const disPatch = useDispatch()
 
     const [formValue, setFormValue] = useState({
@@ -25,43 +38,25 @@ export const PostForm = () => {
         category_id: 1,
         user_id: userIslogin.id,
         filename: '',
+        countlike: 0
     });
-    // setFormValue({ ...formValue, filename: file })
-    console.log('userLogin.: ', userLogin)
-    console.log('formValue: ', formValue);
 
-    // useEffect(() => {
-    //     // console.log("render")
-    //     // console.log(userLogin)
-    //     if (isLogin == true) {
-    //         disPatch(getUserByEmail(userLogin.email))
-    //         console.log(userLogin)
-    //         // setTimeout(() => { setFormValue({ ...formValue, user_id: userLogin.id }) }, 1000)
-    //         // 
-    //     }
-    // }, [isLogin]
-    // )
+
     const handleOnChange = (event) => {
         const { name, value } = event.target;
-        // if (name == 'user_id') {
-        //     value = userLogin.id
-        // }
+
         setFormValue({ ...formValue, [name]: value })
-        // console.log('formValue: ', formValue);
         console.log("evnet.target: ", event.target.value);
     }
     const handleOnChangeFile = (event) => {
         console.log('event: ', event);
-        setFile(event.target.files[0].name)
 
 
-        // console.log('event.target.files[0]: ', event.target.files[0].name);
 
     }
 
     const handlePost = () => {
         if (isLogin == true) {
-            // console.log('userIslogin postForm: ', userIslogin);
             disPatch(addPost(formValue))
         } else {
             alert('bạn chưa đăng nhập')
@@ -79,16 +74,196 @@ export const PostForm = () => {
         // fetch animals data on component mount
 
     }, [])
+
+    const queryClient = useQueryClient();
+    const { handleSubmit, register, control, setValue, watch } = useForm({
+        defaultValues: {
+            tenPhim: "",
+            trailer: "",
+            moTa: "",
+            maNhom: 'GROUP_CODE',
+            ngayKhoiChieu: "",
+            sapChieu: true,
+            dangChieu: false,
+            hot: true,
+            danhGia: "",
+            hinhAnh: undefined,
+        },
+    });
+
+    const file = watch("hinhAnh"); // [0]
+
+    // useQuery({ queryKey: ["list-movie-admin"]})
+    const { mutate: handleAddMovie, isPending } = useMutation({
+        mutationFn: (payload) => addMovieAPI(payload),
+        onSuccess: () => {
+            // call api get list
+            queryClient.invalidateQueries({ queryKey: ["list-movie"] });
+        },
+    });
+
+    const onSubmit = (formValues) => {
+        console.log("formValues", formValues.hinhAnh[0]);
+        const formData = new FormData();
+        formData.append("tenPhim", formValues.tenPhim);
+        formData.append("trailer", formValues.trailer);
+        formData.append("moTa", formValues.moTa);
+        formData.append("maNhom", formValues.maNhom);
+        formData.append("sapChieu", formValues.sapChieu);
+        formData.append("dangChieu", formValues.dangChieu);
+        formData.append("hot", formValues.hot);
+        formData.append("danhGia", formValues.danhGia);
+        formData.append("hinhAnh", formValues.hinhAnh[0]);
+        handleAddMovie(formData);
+    };
+
+    const previewImage = (file) => {
+        return URL.createObjectURL(file);
+    };
+
+    useEffect(() => {
+        if (file?.length > 0) {
+            console.log("previewImage", previewImage(file?.[0])); // url
+        }
+    }, [file]);
+
+    console.log(file);
     return (
         <div>
+            <div>
+                <Typography component={"h2"}>Đăng bài</Typography>
+
+                <Grid
+                    container
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    sx={{ marginTop: 20 }}
+                >
+                    <Grid item md={6}>
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <Stack direction={"column"} spacing={3}>
+                                <TextField
+                                    label="Tiêu đề"
+                                    fullWidth
+                                    {...register("title")}
+                                />
+                                <TextField label="Mô tả" fullWidth {...register("moTa")} />
+                                <TextField label="Nội dung" {...register("content")} />
+                                {!file && (
+                                    <Button
+                                        component="label"
+                                        variant="contained"
+                                        startIcon={<CloudUploadIcon />}
+                                    >
+                                        Tải lên
+                                        <VisuallyHiddenInput
+                                            type="file"
+                                            {...register("hinhAnh")}
+                                            accept=".png,.gif,.jpg"
+                                        />
+                                    </Button>
+                                )}
+                                {file?.length > 0 && (
+                                    <>
+                                        <img src={previewImage(file[0])} width={240} />
+                                        <Button onClick={() => setValue("hinhAnh", undefined)}>
+                                            Xoá hình
+                                        </Button>
+                                    </>
+                                )}
+                                <LoadingButton
+                                    loading={isPending}
+                                    variant="contained"
+                                    size="large"
+                                    type="submit"
+                                >
+                                    ĐĂNG BÀI
+                                </LoadingButton>
+                            </Stack>
+                        </form>
+                    </Grid>
+                </Grid>
+            </div>
 
 
-            <form action="" className='container '
+            {/* *** */}
+            {/* /////////////////// */}
+
+
+            <form class="d-none max-w-md mx-auto mt-40"
                 onSubmit={(event) => {
                     event.preventDefault()
                     handlePost()
                     console.log('formValue:', formValue);
-                }}
+                }}>
+                <div class="relative z-0 w-full mb-5 group">
+                    <input type="text"
+                        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=" "
+                        required
+                        name='title'
+                        id='title'
+                        style={{
+
+                        }}
+                        onChange={handleOnChange} />
+                    <label for="title" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Tiêu đề</label>
+                </div>
+                <div class="relative z-0 w-full mb-5 group">
+                    <textarea type="text"
+                        name='description'
+                        id='description'
+                        style={{
+                        }}
+                        value={formValue.description}
+
+                        onChange={handleOnChange}
+                        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                    <label for="description" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Mô tả</label>
+                </div>
+                <div class="relative z-0 w-full mb-5 group">
+                    <input type="password"
+                        // name='category_id'
+                        // id='category_id'
+                        // style={{
+                        //     borderRadius: '8px'
+                        // }}
+                        // onChange={handleOnChange}
+                        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                    <label for="category_id" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Confirm password</label>
+                </div>
+                {/* <div class="grid md:grid-cols-2 md:gap-6"> */}
+                <div class="relative z-0 w-full mb-5 group">
+                    {/* <label htmlFor=""><span>Ngành nghề</span></label> */}
+
+                    <select
+                        name='category_id'
+                        id='category_id'
+                        style={{
+                            borderRadius: '8px'
+                        }}
+                        onChange={handleOnChange}
+                        className='block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
+                    >
+                        {
+                            listCategory?.map((cate) => {
+                                return (
+                                    <option key={cate.id} value={cate.id}>{cate.name}</option>
+                                )
+                            })
+                        }
+                    </select>
+                </div>
+
+                {/* </div> */}
+
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+            </form>
+
+            {/* /////////////////// */}
+
+            <form action="" className='container '
+
             >
                 <h2 className='text-center mt-5 mb-4' style={{
                     // text underline
@@ -97,35 +272,27 @@ export const PostForm = () => {
                 }}>ĐĂNG BÀI</h2>
 
                 <div className="row">
+
                     <div className="col-6">
                         <label htmlFor="title  "><span>Tiêu đề</span></label>
                         <input type="text"
-                            className='form-control'
-                            name='title'
-                            id='title'
-                            onChange={handleOnChange}
+                            className='form-control border-gray-300'
+
                         />
 
                     </div>
                     <div className="col-6">
                         <label htmlFor="description"><span>Mô tả dự án</span></label>
                         <textarea type="text"
-                            className='form-control'
-                            name='description'
-                            id='description'
-                            value={formValue.description}
+                            className='form-control border-gray-300'
 
-                            onChange={handleOnChange}
                         />
                     </div>
                     <div className="col-6">
-                        <label htmlFor="description"><span>Ngành nghề</span></label>
 
                         <select
                             className='form-control'
-                            name='category_id'
-                            id='category_id'
-                            onChange={handleOnChange}>
+                        >
                             {
                                 listCategory?.map((cate) => {
                                     return (

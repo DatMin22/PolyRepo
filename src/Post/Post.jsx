@@ -15,8 +15,7 @@ export const Post = () => {
   // * get data from store redux use useSelector
   const { isLoading } = useSelector(state => state.post)
   const { userLogin } = useSelector(state => state.auth)
-  // console.log('userLogin: ', userLogin);
-  // console.log('isLoading: ', isLoading);
+
   const disPatch = useDispatch()
 
   // *Loading
@@ -30,19 +29,15 @@ export const Post = () => {
   };
   useEffect(() => {
     disPatch(getListPost())
-    // disPatch(getAllCategory())
-    // fetch animals data on component mount
 
   }, [])
 
   return (
-    <div className='container'>
+    <div className='container-fluid'>
       {isLoading ? (
         <Lottie options={defaultOptions} width={200} height={200} />
       ) : (
         <>
-          {/* <h1 className="mb-5">post List</h1> */}
-          {/* <PostForm /> */}
           <PostList />
         </>
       )}

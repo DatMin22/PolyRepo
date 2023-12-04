@@ -1,13 +1,14 @@
 import React from 'react'
 import { LikeForm } from './LikeForm'
 import { LikeTable } from './LikeTable'
+import { Typography } from '@mui/material'
 
 export const LikeManagement = () => {
   return (
-    <div className='bg-gray-800' >
-            <h1 className=' text-3xl pt-20 pl-72 text-white'>Like Management</h1>
+    <div className='' style={{paddingTop:'5rem'}}>
+            <Typography component={'h1'} className=''>Like Management</Typography>
 
-      <LikeForm />
+      {/* <LikeForm /> */}
       <LikeTable />
     </div>
   )

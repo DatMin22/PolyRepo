@@ -8,7 +8,7 @@ const UserLayout = () => {
     return (
         <div>
             <Header />
-            <Carousel />
+            {/* <Carousel /> */}
             <Outlet />
             <Footer />
         </div>

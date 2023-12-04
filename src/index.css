@@ -1,12 +1,13 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+
 /* @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;500&display=swap"); */
 /* @import url("https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@100;400;500&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap");
 *,
 html {
   /* font-family: "Montserrat", sans-serif; */
-  font-family: "Playpen Sans", cursive;
+  /* font-family: "Playpen Sans", cursive; */
+  font-family: "Roboto", sans-serif;
 
   margin: 0;
   padding: 0;
@@ -19,23 +20,35 @@ a {
 }
 a:hover {
   color: #fff;
+  text-decoration: none;
 }
 ul > li {
   list-style: none;
   /* display: block; */
 }
 
-.avatarUser {
+/* .btn-login:hover {
+  background-color: #23424e;
+} */
+
+/* .avatarUser {
   width: 60px;
   height: 60px;
   border-radius: 50%;
   object-fit: cover;
   background-color: beige;
+} */
+
+.btn_userProfile:focus {
+  outline: none;
+  border: none;
 }
 .postList {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 1rem;
+  /* căn giữa */
+  justify-content: center;
 }
 .postList .postItem {
   height: fit-content;
@@ -63,8 +76,7 @@ ul > li {
   margin-left: 1rem;
 }
 
-
-.like-button i{
+.like-button i {
   /* background-color: #000; */
   color: #000;
   /* color: #000;
@@ -76,7 +88,29 @@ ul > li {
   /* border: 1px solid #ccc; */
 }
 
-.like-button.liked i{
+.like-button.liked i {
   color: #ff0000;
   /* color: #fff; */
+}
+
+.heart.isliked {
+  /* background-color: #e63745; */
+  color: #ff0000;
+  border: transparent;
+}
+.heart.unlike {
+  /* background-color: #e63745; */
+  color: #8f8f8f;
+  border: transparent;
+}
+.Chair.booked {
+  background-color: #909090;
+  color: #000;
+  pointer-events: none;
+  border: transparent;
+}
+
+.bg{
+  background-color: #1F2937;
+  height: 100vh;
 }

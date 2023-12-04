@@ -1,12 +1,13 @@
 import React from 'react'
 import { UsersForm } from './UsersForm'
 import { UserTable } from './UserTable'
+import { Typography } from '@mui/material'
 export const User = () => {
   return (
-    <div className='bg-gray-800'>
-      <h1 className=' text-3xl pt-20 pl-72 text-white'>User Management</h1>
-
-      <UsersForm />
+    <div className='' style={{ paddingTop: '5rem' }}>
+      <Typography className=' '>Quản lý người dùng</Typography>
+      <Typography>Xin chào, tôi là ....., chào mừng bạn đến với trang quản lý người dùng.</Typography>
+      {/* <UsersForm /> */}
       <UserTable />
     </div>
   )

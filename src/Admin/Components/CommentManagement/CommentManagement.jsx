@@ -4,10 +4,10 @@ import { CommentTable } from './CommentTable'
 
 export const CommentManagement = () => {
   return (
-    <div className='bg-gray-800'>
-            <h1 className=' text-3xl pt-20 pl-72 text-white'>Comment Management</h1>
+    <div className='' style={{paddingTop:'5rem'}}>
+            <h1 className=' '>Comment Management</h1>
 
-      <CommentForm />
+      {/* <CommentForm /> */}
       <CommentTable />
     </div>
   )

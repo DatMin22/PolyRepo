@@ -81,9 +81,21 @@ const authSlice = createSlice({
 
                 })
                 .catch((error) => {
+                    console.log('error: ', error);
                     alert("Đã có lỗi xảy ra. Đăng ký thất bại")
 
                 })
+
+        },
+        logout(state) {
+            state.isLogin = false
+            state.userIslogin = '',
+                state.userLogin = ''
+
+        },
+        reload(state) {
+            state.isLogin = true
+
 
         },
 
@@ -98,6 +110,7 @@ const authSlice = createSlice({
             // console.log('state.userLogin: ', state.userLogin)
             state.isLogin = true
 
+
         })
         builder.addCase(login.rejected, (state) => {
             alert("lỗi");
@@ -108,6 +121,7 @@ const authSlice = createSlice({
             let object = Object.assign({}, ...payload)
             state.isLogin = true
             state.userIslogin = object
+
             console.log('state.userLogin: ', state.userLogin);
 
         })

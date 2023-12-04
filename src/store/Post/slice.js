@@ -5,9 +5,11 @@ import * as apiServices from '../../Services/apiServices'
 const initialState = {
     isLoading: false,
     postList: [],
+    commentList: [],
     commentListByPostID: [],
     fileUpload: '',
-    postEdit: undefined
+    postEdit: undefined,
+    listGetPostById: {}
 }
 
 const baseURL = 'http://localhost:8080'
@@ -34,6 +36,20 @@ export const addPost = createAsyncThunk("posts/add", async (formValue) => {
         console.log("error", error);
     }
 })
+export const getPostById = createAsyncThunk("getPostById", async (id) => {
+    try {
+        const response = await axios.get(
+            `${baseURL}/posts/${id}`,
+            // { headers: { 'Content-Type': 'application/json' } }
+
+        )
+        console.log('response getPostById: ', response);
+        return response.data.data
+        // console.log("response", response)
+    } catch (error) {
+        console.log("error", error);
+    }
+})
 export const upLoadFile = createAsyncThunk("uploadFile", async (file) => {
     try {
         const response = await axios.post(
@@ -43,6 +59,15 @@ export const upLoadFile = createAsyncThunk("uploadFile", async (file) => {
         )
         return file.originalFileName
         console.log("response", response)
+    } catch (error) {
+        console.log("error", error);
+    }
+})
+export const getListComment = createAsyncThunk("comment/getAll", async () => {
+    try {
+        const response = await apiServices.get(`/comment/getAll`)
+        console.log("response", response)
+        return response.data.data
     } catch (error) {
         console.log("error", error);
     }
@@ -125,6 +150,11 @@ const postSlice = createSlice({
         })
 
         // *COMMENT
+        builder.addCase(getListComment.fulfilled, (state, { payload }) => {
+            state.commentList = payload
+
+
+        })
         builder.addCase(addComment.pending, (state) => {
             // state.comment = payload
             // state.isLoading = false
@@ -151,6 +181,14 @@ const postSlice = createSlice({
         builder.addCase(getCommentByPostID.fulfilled, (state, { payload }) => {
             // console.log('payload: ', payload);
             state.commentListByPostID = payload
+
+
+        })
+
+        // *getPostById
+        builder.addCase(getPostById.fulfilled, (state, { payload }) => {
+            console.log('payload: ', payload);
+            state.listGetPostById = payload
 
 
         })

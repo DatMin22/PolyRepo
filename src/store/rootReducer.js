@@ -3,6 +3,8 @@ import { adminReducer } from './Admin/slice'
 import { authReducer } from './Auth/slice'
 import { postReducer } from './Post/slice'
 import { categoryReducer } from './Category/slice'
+import { likeReducer } from './Like/slice'
+import { forgotPassReducer } from './ForgotPass/slice'
 
 export const rootReducer = combineReducers({
     // demoRedux: demoReduxReducer,
@@ -12,7 +14,9 @@ export const rootReducer = combineReducers({
     admin: adminReducer,
     auth: authReducer,
     post: postReducer,
-    category:categoryReducer
+    category: categoryReducer,
+    like: likeReducer,
+    forgotPass: forgotPassReducer
 })
 
 

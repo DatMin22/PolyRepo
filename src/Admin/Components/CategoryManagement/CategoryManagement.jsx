@@ -13,10 +13,10 @@ export const CategoryManagement = () => {
         disPatch(getAllCategory())
     }, [])
     return (
-        <div className='bg-gray-800'>
+        <div className='' style={{paddingTop:'5rem'}}>
             <h1 className=' text-3xl pt-20 pl-72 text-white'>Category Management</h1>
 
-            <CategoryForm />
+            {/* <CategoryForm /> */}
             <CategoryTable listCategory={listCategory} />
         </div>
     )

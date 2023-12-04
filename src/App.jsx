@@ -20,6 +20,11 @@ import { ShareManagement } from './Admin/Components/ShareManagement/ShareManagem
 import { CommentManagement } from './Admin/Components/CommentManagement/CommentManagement'
 import { CategoryManagement } from './Admin/Components/CategoryManagement/CategoryManagement'
 import { Dashboards } from './Admin/Components/Dashboards/Dashboards'
+import { ForgotPass } from './modules/ForgotPass/ForgotPass'
+import { ForgotPassToken } from './modules/ForgotPass/ForgotPassToken'
+import { UserProfile } from './modules/UserProfile/UserProfile'
+import ChangePass from './modules/ChangePass/ChangePass'
+import { PATH } from './constants/paths'
 function App() {
 
   // login()
@@ -46,22 +51,31 @@ function App() {
 
           {/* <Route path='postList' element={<PostList />} /> */}
           <Route path='uploadPost' element={<PostForm />} />
-          <Route path='/demolike' element={<DemoLike />} />
+          <Route path='/changePass' element={<ChangePass />} />
+
+          <Route path={PATH.PROFILE} element={<UserProfile />} />
+
 
 
           {/* Dynamic segments */}
           {/* <Route path='animal/:id' element={<AnimalDetails />} /> */}
         </Route>
 
-        <Route path='admin' element={<AdminLayout />}>
+        {/*  */}
+        <Route path="/sign-in" element={<Login />}></Route>
+        <Route path="/sign-up" element={<Register />}></Route>
+        <Route path={PATH.FORGET_PASSWORD} element={<ForgotPass />} />
+        <Route path='/forgotPassToken' element={<ForgotPassToken />} />
+        {/*  */}
+
+        <Route path={PATH.DASHBOARD} element={<AdminLayout />}>
           <Route index element={<Dashboards />} />
-          <Route path='post-management' element={<PostManagement />} />
-          <Route path='user-management' element={<User />} />
-          <Route path='comment-management' element={<CommentManagement />} />
-          <Route path='like-management' element={<LikeManagement />} />
-          <Route path='role-management' element={<RoleManagement />} />
-          <Route path='share-management' element={<ShareManagement />} />
-          <Route path='category-management' element={<CategoryManagement />} />
+          <Route path={PATH.POSTS_MANAGEMENT} element={<PostManagement />} />
+          <Route path={PATH.USERS_MANAGEMENT} element={<User />} />
+          <Route path={PATH.COMMENTS_MANAGEMENT} element={<CommentManagement />} />
+          <Route path={PATH.LIKES_MANAGEMENT} element={<LikeManagement />} />
+          <Route path={PATH.SHARES_MANAGEMENT} element={<ShareManagement />} />
+          <Route path={PATH.CATEGORIES_MANAGEMENT} element={<CategoryManagement />} />
         </Route>
       </Routes>
 
