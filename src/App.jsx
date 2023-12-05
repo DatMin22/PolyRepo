@@ -51,7 +51,7 @@ function App() {
 
           {/* <Route path='postList' element={<PostList />} /> */}
           <Route path='uploadPost' element={<PostForm />} />
-          <Route path='/changePass' element={<ChangePass />} />
+          <Route path={PATH.CHANGE_PASSWORD} element={<ChangePass />} />
 
           <Route path={PATH.PROFILE} element={<UserProfile />} />
 
@@ -62,10 +62,10 @@ function App() {
         </Route>
 
         {/*  */}
-        <Route path="/sign-in" element={<Login />}></Route>
-        <Route path="/sign-up" element={<Register />}></Route>
-        <Route path={PATH.FORGET_PASSWORD} element={<ForgotPass />} />
-        <Route path='/forgotPassToken' element={<ForgotPassToken />} />
+        <Route path={PATH.SIGNIN} element={<Login />}></Route>
+        <Route path={PATH.SIGNUP} element={<Register />}></Route>
+        <Route path={PATH.CONFIRM_EMAIL} element={<ForgotPass />} />
+        <Route path={PATH.FORGET_CHANGE_PASSWORD} element={<ForgotPassToken />} />
         {/*  */}
 
         <Route path={PATH.DASHBOARD} element={<AdminLayout />}>

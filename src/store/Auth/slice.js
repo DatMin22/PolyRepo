@@ -98,6 +98,11 @@ const authSlice = createSlice({
 
 
         },
+        setIsLogin(state, { payload }) {
+            state.isLogin = payload
+
+
+        },
 
     },
     extraReducers(builder) {

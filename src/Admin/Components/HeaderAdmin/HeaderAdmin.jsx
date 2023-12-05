@@ -11,9 +11,10 @@ import ListItemButton from '@mui/material/ListItemButton'
 import InboxIcon from '@mui/icons-material/MoveToInbox'
 import MailIcon from '@mui/icons-material/Mail'
 import { useState } from 'react'
-import { styled, useTheme } from '@mui/material/styles';
- import SearchIcon from '@mui/icons-material/Search';
+import { styled, useTheme } from '@mui/material/styles'
+import SearchIcon from '@mui/icons-material/Search'
 import { PATH } from '../../../constants/paths'
+import { currentUser } from '../../../modules/auththen/auththen'
 const drawerWidth = 240;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -63,6 +64,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 export const HeaderAdmin = () => {
     const { isLogin, userLogin, userIslogin } = useSelector(state => state.auth)
+    console.log('isLogin: ', isLogin)
 
     console.log('userIslogin: ', userIslogin);
     const theme = useTheme();
@@ -75,9 +77,10 @@ export const HeaderAdmin = () => {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+    
     const settings =
         [
-            <Link Link to={PATH.HOME} style={{ color: '#000', textAlign: 'center' }}>
+            <Link style={{ color: '#000', textAlign: 'center' }}>
                 {userIslogin?.name}
             </Link >,
             <Link Link to={PATH.DASHBOARD} style={{
@@ -163,7 +166,7 @@ export const HeaderAdmin = () => {
                                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                         <Avatar
 
-                                            alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                                            alt="Remy Sharp" src="https://cliply.co/wp-content/uploads/2020/09/442008571_ARTIST_AVATAR_3D_400.png" />
                                     </IconButton>
                                 </Tooltip>
                                 <Menu
@@ -183,7 +186,7 @@ export const HeaderAdmin = () => {
                                     onClose={handleCloseUserMenu}
                                 >
                                     {settings.map((setting) => (
-                                        <MenuItem key={setting}>
+                                        <MenuItem key={setting} onClick={handleCloseUserMenu}>
                                             <Typography textAlign="center">{setting}</Typography>
                                         </MenuItem>
                                     ))}

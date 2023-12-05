@@ -32,38 +32,54 @@ export const Header = () => {
         return localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null
 
     })
+    console.log('currentUser: ', currentUser)
     // chạy khi dữ liệu trong dependency thay đổi
-    if (isLogin == true && userIslogin) {
-        localStorage.setItem('currentUser', JSON.stringify(userIslogin))
-    }
+    // if (isLogin == true) {
+    //     if (userIslogin) {
+
+    //     }
+    // }
     if (currentUser) {
+        dispatch(authActions.setIsLogin(true))
+
+        // setCurrentUser(JSON.parse(localStorage.getItem('currentUser')))
         console.log("currentUser", currentUser)
+        // setCurrentUser(currentUser)
     }
+    // if (isLogin == false && currentUser == null) {
+    //     dispatch(authActions.setIsLogin())
+
+    // }
+    else if (isLogin == true && userIslogin) {
+        localStorage.setItem('currentUser', JSON.stringify(userIslogin))
+    setCurrentUser(userIslogin)
+    }
+
 
     const pages = ['Products', 'Pricing', 'Blog'];
     const settings =
         [
             <Link Link to={'/'} style={{ color: '#000', textAlign: 'center' }}>
-                {userIslogin?.name}
+                {currentUser?.name}
             </Link >,
             <Link Link to={PATH.DASHBOARD} style={{
-                display: userIslogin?.roleId === 1 ? "block" : "none",
+                display: currentUser?.roleId === 1 ? "block" : "none",
                 color: '#000', textAlign: 'center'
             }}>
                 Quản trị
             </Link >,
-            <Link to={'/userProfile'} style={{ color: '#000', textAlign: 'center' }}>
+            <Link to={PATH.PROFILE} style={{ color: '#000', textAlign: 'center' }}>
                 Tài khoản
             </Link>,
             <Link to={'/changePass'} style={{ color: '#000', textAlign: 'center' }}>
                 Đổi mật khẩu
             </Link>,
 
-            <Link
+            <Link to={PATH.SIGNIN}
                 onClick={() => {
                     localStorage.clear('currentUser')
                     dispatch(authActions.logout())
-                    navigate('/')
+                    // navigate(PATH.SIGNIN)
                 }}
                 style={{ color: '#000', textAlign: 'center' }}>
                 Đăng xuất
@@ -118,10 +134,11 @@ export const Header = () => {
                                 letterSpacing: '.3rem',
                                 color: 'inherit',
                                 textDecoration: 'none',
+                                padding: '1rem'
                             }}
                         >
                             <Link to={'/'}>
-                                <img src="./images/logoPolyRepo.png" className="h-10" alt="PolyRepo Logo" />
+                                <img src="./images/logoPolyRepo.png" width={100} alt="PolyRepo Logo" />
                             </Link>
                         </Typography>
 
@@ -177,11 +194,12 @@ export const Header = () => {
                                 letterSpacing: '.3rem',
                                 color: 'inherit',
                                 textDecoration: 'none',
+                                padding: '1rem'
                             }}
                         >
 
                             <Link to={'/'}>
-                                <img src="./images/logoPolyRepo.png" className="h-10" alt="PolyRepo Logo" />
+                                <img src="./images/logoPolyRepo.png" className="" width={100} alt="PolyRepo Logo" />
                             </Link>
                         </Typography>
                         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
@@ -195,12 +213,14 @@ export const Header = () => {
                                 </Button>
                             ))} */}
                             <Stack direction="row" spacing={5}
-                                style={{ width: '100%', display: 'flex', justifyContent: 'end' }}>
+                                style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', }}
+                            >
                                 <Link
                                     sx={{
                                         cursor: 'pointer'
                                     }}
                                     to={'uploadPost'}
+                                    style={{ display: isLogin ? "block" : "none" }}
                                 >Tải lên</Link>
                                 <Link
                                     sx={{
@@ -228,7 +248,7 @@ export const Header = () => {
                                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                     <Avatar
 
-                                        alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                                        alt="Remy Sharp" src="https://cliply.co/wp-content/uploads/2020/09/442008571_ARTIST_AVATAR_3D_400.png" />
                                 </IconButton>
                             </Tooltip>
                             <Menu
@@ -248,7 +268,7 @@ export const Header = () => {
                                 onClose={handleCloseUserMenu}
                             >
                                 {settings.map((setting) => (
-                                    <MenuItem key={setting}>
+                                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
                                         <Typography textAlign="center">{setting}</Typography>
                                     </MenuItem>
                                 ))}

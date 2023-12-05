@@ -8,6 +8,7 @@ import { checkEmailToChangePass } from '../../store/ForgotPass/slice'
 import { Link, useNavigate } from 'react-router-dom'
 import { Box, Button, Container, CssBaseline, Grid, Paper, TextField, Typography } from '@mui/material'
 import styled from '@emotion/styled'
+import { PATH } from '../../constants/paths'
 
 export const ForgotPass = () => {
     const [formValue, setFormValue] = useState({
@@ -175,7 +176,7 @@ export const ForgotPass = () => {
                                             setFormValue({
                                                 email: '',
                                             })
-                                            navigate('/forgotPassToken')
+                                            navigate(PATH.FORGET_CHANGE_PASSWORD)
 
 
                                         }}

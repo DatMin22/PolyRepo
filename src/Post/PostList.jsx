@@ -24,6 +24,9 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Box, Button, Container, Grid, Modal, Stack } from '@mui/material'
 
 export const PostList = () => {
+    // * laasy currentUser tuwf localstorage
+    const currentUser = JSON.parse(localStorage.getItem('currentUser')) || null
+    console.log('currentUser: ', currentUser)
     const style = {
         position: 'absolute',
         top: '50%',
@@ -65,7 +68,7 @@ export const PostList = () => {
     const { likeByPostId, listLike, likePostNew, likeByUserId } = useSelector(state => state.like)
     const [postDetail, setPostDetail] = useState({})
     const [commentContent, setCommentContent] = useState('')
-    let user_Id = userIslogin.id
+    let user_Id = currentUser?.id
     let post_Id = postDetail.id
     const disPatch = useDispatch()
     const handleComment = () => {
@@ -147,7 +150,7 @@ export const PostList = () => {
                             <IconButton aria-label="add to favorites"
                                 className={
                                     classnames('heart', {
-                                        isliked: listLike?.find((like) => like.user_id === userIslogin.id && like.post_id === postDetail.id),
+                                        isliked: listLike?.find((like) => like.user_id === currentUser?.id && like.post_id === postDetail?.id),
                                         // unlike: listLike.find((like) => like.user_id !== userIslogin.id && like.post_id !== postDetail.id),
 
                                     })}
@@ -161,7 +164,7 @@ export const PostList = () => {
                                         likePost({
                                             likeStatus: 'True',
                                             post_id: postDetail.id,
-                                            user_id: userIslogin.id,
+                                            user_id: currentUser.id,
 
                                         }))
 
@@ -233,7 +236,7 @@ export const PostList = () => {
                                         <span className='mr-2'
                                             style={{
                                                 fontWeight: 'bolder'
-                                            }}>{userIslogin.name}</span>
+                                            }}>{currentUser?.name}</span>
                                         <input type="text" className='form-control'
                                             style={{
                                                 borderRadius: '1rem',

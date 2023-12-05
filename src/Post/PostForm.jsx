@@ -14,6 +14,9 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useForm, Controller } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { LoadingButton } from "@mui/lab";
+import { Navigate } from 'react-router-dom';
+import { PATH } from '../constants/paths';
+import { currentUser, isCurrentUser } from '../modules/auththen/auththen';
 const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -29,14 +32,18 @@ export const PostForm = () => {
     const { fileUpload } = useSelector(state => state.post)
     const { userLogin, isLogin, userIslogin } = useSelector(state => state.auth)
     const { listCategory } = useSelector(state => state.category)
-
+    console.log('currentUser: ', currentUser)
+    if (currentUser == null && !isLogin) {
+        return <Navigate to={PATH.SIGNIN} />
+    }
+    // currentUser
     const disPatch = useDispatch()
 
     const [formValue, setFormValue] = useState({
         title: '',
         description: '',
         category_id: 1,
-        user_id: userIslogin.id,
+        user_id: currentUser?.id,
         filename: '',
         countlike: 0
     });

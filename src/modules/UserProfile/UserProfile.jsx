@@ -1,9 +1,15 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { Navigate } from 'react-router-dom'
+import { PATH } from '../../constants/paths'
 
 export const UserProfile = () => {
-    const { userIslogin } = useSelector((state) => state.auth)
-    console.log('userIslogin: ', userIslogin)
+    // const { userIslogin } = useSelector((state) => state.auth)
+    const currentUser = JSON.parse(localStorage.getItem('currentUser')) || null
+    if (currentUser == null) {
+        return <Navigate to={PATH.SIGNIN} />
+    }
+    // console.log('userIslogin: ', userIslogin)
     return (
 
         <div className="mt-32 mb-10 ">
@@ -19,11 +25,11 @@ export const UserProfile = () => {
                         </p>
                     </div>
                     <div>
-                    <img className='w-16 rounded-full' src="https://cliply.co/wp-content/uploads/2020/09/442008571_ARTIST_AVATAR_3D_400.png" alt="" />
+                        <img className='w-16 rounded-full' src="https://cliply.co/wp-content/uploads/2020/09/442008571_ARTIST_AVATAR_3D_400.png" alt="" />
 
+                    </div>
                 </div>
-                </div>
-                
+
                 <div className="border-t border-gray-200">
                     <dl>
                         <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -32,7 +38,7 @@ export const UserProfile = () => {
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 <input type="text" id="" class="bg-gray-50  border-none text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" disabled placeholder="" required
-                                    value={userIslogin.name} />
+                                    value={currentUser?.name} />
 
                             </dd>
                         </div>
@@ -43,7 +49,7 @@ export const UserProfile = () => {
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 <input type="text" id=""
                                     class="bg-gray-50  border-none text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" disabled placeholder="" required
-                                    value={userIslogin.email}
+                                    value={currentUser?.email}
                                 />
 
                             </dd>
@@ -53,7 +59,7 @@ export const UserProfile = () => {
                                 Vai trò
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {userIslogin.roleId ? <>{userIslogin.roleId === 1 ? "Admin" : "User"}</> : <></>}
+                                {currentUser?.roleId ? <>{currentUser?.roleId === 1 ? "Admin" : "User"}</> : <></>}
 
                             </dd>
                         </div>

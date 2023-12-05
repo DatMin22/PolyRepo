@@ -9,8 +9,17 @@ import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { getLikeByUserId } from '../../store/Like/slice'
 import { Box, Button, Checkbox, Container, CssBaseline, FormControlLabel, Grid, Paper, Stack, TextField, Typography } from '@mui/material'
 import styled from '@emotion/styled'
+import { PATH } from '../../constants/paths'
+import { currentUser, isCurrentUser } from '../../modules/auththen/auththen'
 export const Login = () => {
     const navigate = useNavigate()
+    // // * lấy currentUser từ localstorage
+    // const currentUser = JSON.parse(localStorage.getItem('currentUser')) || null
+    // console.log('currentUser: ', currentUser)
+    if (currentUser != null) {
+        return <Navigate to={PATH.HOME} />
+    }
+
     const [cookies, setCookie, removeCookie] = useCookies(['user']);
 
     const { userLogin, isLogin, userIslogin } = useSelector((state) => state.auth)
@@ -259,12 +268,12 @@ export const Login = () => {
                                         </CustomButton>
                                         <Grid container >
                                             <Grid item xs>
-                                                <Link to={'/forgotPass'} variant="body2" style={{ color: '#1F2937' }}>
+                                                <Link to={PATH.CONFIRM_EMAIL} variant="body2" style={{ color: '#1F2937' }}>
                                                     <small>Quên mật khẩu?</small>
                                                 </Link>
                                             </Grid>
                                             <Grid item>
-                                                <Link to={'/sign-up'} variant="body2" style={{ color: '#1F2937' }}>
+                                                <Link to={PATH.SIGNUP} variant="body2" style={{ color: '#1F2937' }}>
                                                     <small>Chưa có tài khoản? Đăng ký</small>
                                                 </Link>
                                             </Grid>
