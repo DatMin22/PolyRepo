@@ -16,13 +16,15 @@ export const Login = () => {
     // // * lấy currentUser từ localstorage
     // const currentUser = JSON.parse(localStorage.getItem('currentUser')) || null
     // console.log('currentUser: ', currentUser)
-    if (currentUser != null) {
-        return <Navigate to={PATH.HOME} />
-    }
+
 
     const [cookies, setCookie, removeCookie] = useCookies(['user']);
 
     const { userLogin, isLogin, userIslogin } = useSelector((state) => state.auth)
+    console.log('userIslogin: ', userIslogin)
+    if (currentUser !== null || isLogin == true) {
+        return <Navigate to={PATH.HOME} />
+    }
     const [formValue, setFormValue] = useState({
         email: '',
         password: '',

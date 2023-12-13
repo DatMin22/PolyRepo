@@ -155,27 +155,42 @@ export const PostList = () => {
 
                                     })}
                                 onClick={() => {
+                                    const like = listLike?.find((like) => like.user_id === currentUser?.id && like.post_id === postDetail?.id)
+                                    console.log('like: ', like?.id)
+
                                     // handleLike()
-                                    // if (listLike?.find((like) => like.user_id === userIslogin.id && like.post_id === postDetail.id)) {
+                                    if (like !== undefined) {
+                                        disPatch(deleteLikeById(like.id))
+                                        disPatch(getAllLike())
+                                        var element = document.querySelector(".heart")
+                                        element.classList.remove("isliked")
+                                    } else {
+                                        disPatch(
+                                            likePost({
+                                                likeStatus: 'True',
+                                                post_id: postDetail?.id,
+                                                user_id: currentUser?.id,
 
-                                    //     deleteLikeById()
-                                    // }
-                                    disPatch(
-                                        likePost({
-                                            likeStatus: 'True',
-                                            post_id: postDetail.id,
-                                            user_id: currentUser.id,
+                                            }))
+                                        disPatch(getAllLike())
 
-                                        }))
+                                    }
+                                    console.log('like: ', like)
 
 
                                 }}
                             >
                                 <FavoriteIcon />
                             </IconButton>
+                            <span>{postDetail?.countlike}</span>
                             <IconButton aria-label="share">
                                 <ShareIcon />
                             </IconButton>
+                            <span className='' id='cmtList'
+                                onClick={() => {
+                                    disPatch(getLikeByPostId(postDetail?.id))
+                                }}>
+                                <i className='bx bx-recycle'></i></span>
                             <ExpandMore expand={expanded}
                                 onClick={handleExpandClick}
                                 aria-expanded={expanded}

@@ -226,7 +226,7 @@ export const Header = () => {
                                     sx={{
                                         cursor: 'pointer'
                                     }}
-                                    to={'sign-in'}
+                                    to={PATH.SIGNIN}
                                     style={{ display: isLogin ? "none" : "block" }}
 
                                 >Đăng nhập</Link>

@@ -110,7 +110,6 @@ const authSlice = createSlice({
         })
         builder.addCase(login.fulfilled, (state, { payload }) => {
             state.userLogin = payload
-            $('#loginModal').modal('hide')
 
             // console.log('state.userLogin: ', state.userLogin)
             state.isLogin = true

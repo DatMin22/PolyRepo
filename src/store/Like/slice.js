@@ -50,12 +50,13 @@ export const getLikeByUserId = createAsyncThunk("getLikeByUserId", async (id) =>
 })
 export const deleteLikeById = createAsyncThunk("deleteLikeById", async (id) => {
     try {
-        const response = await axios.delete(
+        const response = await apiServices.remove(
             `http://localhost:8080/like/delete/${id}`,
         )
-        console.log("response", response)
-        return response.data.data
+        console.log("response delete like: ", response)
+        // return response.data.data//
     } catch (error) {
+        // throw (error)
         console.log("error", error);
     }
 })
