@@ -89,8 +89,8 @@ const authSlice = createSlice({
         },
         logout(state) {
             state.isLogin = false
-            state.userIslogin = '',
-                state.userLogin = ''
+            state.userIslogin = ''
+            state.userLogin = ''
 
         },
         reload(state) {

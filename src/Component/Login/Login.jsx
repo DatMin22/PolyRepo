@@ -21,7 +21,9 @@ export const Login = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['user']);
 
     const { userLogin, isLogin, userIslogin } = useSelector((state) => state.auth)
+    console.log('isLogin: ', isLogin)
     console.log('userIslogin: ', userIslogin)
+    console.log('currentUser: ', currentUser)
     if (currentUser !== null || isLogin == true) {
         return <Navigate to={PATH.HOME} />
     }

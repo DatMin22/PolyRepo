@@ -39,7 +39,7 @@ export const Header = () => {
 
     //     }
     // }
-    if (currentUser) {
+    if (currentUser !== null) {
         dispatch(authActions.setIsLogin(true))
 
         // setCurrentUser(JSON.parse(localStorage.getItem('currentUser')))
@@ -52,17 +52,17 @@ export const Header = () => {
     // }
     else if (isLogin == true && userIslogin) {
         localStorage.setItem('currentUser', JSON.stringify(userIslogin))
-    setCurrentUser(userIslogin)
+        setCurrentUser(userIslogin)
     }
 
 
     const pages = ['Products', 'Pricing', 'Blog'];
     const settings =
         [
-            <Link Link to={'/'} style={{ color: '#000', textAlign: 'center' }}>
+            <Link to={'/'} style={{ color: '#000', textAlign: 'center' }}>
                 {currentUser?.name}
             </Link >,
-            <Link Link to={PATH.DASHBOARD} style={{
+            <Link to={PATH.DASHBOARD} style={{
                 display: currentUser?.roleId === 1 ? "block" : "none",
                 color: '#000', textAlign: 'center'
             }}>
@@ -75,7 +75,8 @@ export const Header = () => {
                 Đổi mật khẩu
             </Link>,
 
-            <Link to={PATH.SIGNIN}
+            <Link
+                to={PATH.SIGNIN}
                 onClick={() => {
                     localStorage.clear('currentUser')
                     dispatch(authActions.logout())

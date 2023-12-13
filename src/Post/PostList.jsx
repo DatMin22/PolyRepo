@@ -69,7 +69,7 @@ export const PostList = () => {
     const [postDetail, setPostDetail] = useState({})
     const [commentContent, setCommentContent] = useState('')
     let user_Id = currentUser?.id
-    let post_Id = postDetail.id
+    let post_Id = postDetail?.id
     const disPatch = useDispatch()
     const handleComment = () => {
 
@@ -150,12 +150,12 @@ export const PostList = () => {
                             <IconButton aria-label="add to favorites"
                                 className={
                                     classnames('heart', {
-                                        isliked: listLike?.find((like) => like.user_id === currentUser?.id && like.post_id === postDetail?.id),
+                                        isliked: listLike?.find((like) => like?.user_id === currentUser?.id && like?.post_id === postDetail?.id),
                                         // unlike: listLike.find((like) => like.user_id !== userIslogin.id && like.post_id !== postDetail.id),
 
                                     })}
                                 onClick={() => {
-                                    const like = listLike?.find((like) => like.user_id === currentUser?.id && like.post_id === postDetail?.id)
+                                    const like = listLike?.find((like) => like?.user_id === currentUser?.id && like?.post_id === postDetail?.id)
                                     console.log('like: ', like?.id)
 
                                     // handleLike()
