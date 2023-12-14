@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { addPost, upLoadFile } from '../store/Post/slice';
+import { upLoadFile } from '../store/Post/slice';
 import { Uploader } from "uploader" // Installed by "react-uploader".
 import { UploadButton } from "react-uploader"
 import { useEffect } from 'react';
 import { getUserByEmail } from '../store/Auth/slice';
 import { HeaderDemo } from '../Component/Header/HeaderDemo';
+import * as yup from "yup"
+import { yupResolver } from "@hookform/resolvers/yup";
 import { categoryActions, getAllCategory } from '../store/Category/slice';
-import { Grid, Stack, TextField, Typography } from "@mui/material";
+import { Box, FormControl, Grid, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -17,6 +19,7 @@ import { LoadingButton } from "@mui/lab";
 import { Navigate } from 'react-router-dom';
 import { PATH } from '../constants/paths';
 import { currentUser, isCurrentUser } from '../modules/auththen/auththen';
+import { addPost } from '../Services/apiServices';
 const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -27,7 +30,22 @@ const VisuallyHiddenInput = styled("input")({
     left: 0,
     whiteSpace: "nowrap",
     width: 1,
-});
+})
+
+const schemaSignup = yup.object({
+    title: yup
+        .string()
+        .required("Vui lòng nhập tiêu đề"),
+    // .min(10, "Tài khoản ít nhất 6 ký tự")
+    // .max(20, "Tài khoản không vượt quá 8 ký tự"),
+    description: yup
+        .string()
+        .required("Vui lòng nhập nội dung")
+    ,
+    category_id: yup
+        .number()
+        .required('Vui lòng chọn ngành học')
+})
 export const PostForm = () => {
     const { fileUpload } = useSelector(state => state.post)
     const { userLogin, isLogin, userIslogin } = useSelector(state => state.auth)
@@ -53,6 +71,7 @@ export const PostForm = () => {
         const { name, value } = event.target;
 
         setFormValue({ ...formValue, [name]: value })
+        console.log('formValue: ', formValue)
         console.log("evnet.target: ", event.target.value);
     }
     const handleOnChangeFile = (event) => {
@@ -81,58 +100,64 @@ export const PostForm = () => {
         // fetch animals data on component mount
 
     }, [])
-
+    const previewImage = (file) => {
+        return URL.createObjectURL(file);
+    };
     const queryClient = useQueryClient();
-    const { handleSubmit, register, control, setValue, watch } = useForm({
+    const { handleSubmit, formState: { errors }, register, control, setValue, watch } = useForm({
         defaultValues: {
-            tenPhim: "",
-            trailer: "",
-            moTa: "",
-            maNhom: 'GROUP_CODE',
-            ngayKhoiChieu: "",
-            sapChieu: true,
-            dangChieu: false,
-            hot: true,
-            danhGia: "",
-            hinhAnh: undefined,
-        },
+            // tenPhim: "",
+            // trailer: "",
+            // moTa: "",
+            // maNhom: 'GROUP_CODE',
+            // ngayKhoiChieu: "",
+            // sapChieu: true,
+            // dangChieu: false,
+            // hot: true,
+            // danhGia: "",
+            // hinhAnh: undefined,
+            title: '',
+            description: '',
+            category_id: 1,
+            user_id: currentUser?.id,
+            filename: '',
+            countlike: 0
+        }, resolver: yupResolver(schemaSignup),
+        mode: "all",
     });
 
-    const file = watch("hinhAnh"); // [0]
+    const file = watch("filename"); // [0]
 
     // useQuery({ queryKey: ["list-movie-admin"]})
-    const { mutate: handleAddMovie, isPending } = useMutation({
-        mutationFn: (payload) => addMovieAPI(payload),
+    const { mutate: handleAddPost, isPending } = useMutation({
+        mutationFn: (payload) => addPost(payload),
         onSuccess: () => {
             // call api get list
-            queryClient.invalidateQueries({ queryKey: ["list-movie"] });
+            // queryClient.invalidateQueries({ queryKey: ["list-movie"] });
         },
     });
 
     const onSubmit = (formValues) => {
-        console.log("formValues", formValues.hinhAnh[0]);
-        const formData = new FormData();
-        formData.append("tenPhim", formValues.tenPhim);
-        formData.append("trailer", formValues.trailer);
-        formData.append("moTa", formValues.moTa);
-        formData.append("maNhom", formValues.maNhom);
-        formData.append("sapChieu", formValues.sapChieu);
-        formData.append("dangChieu", formValues.dangChieu);
-        formData.append("hot", formValues.hot);
-        formData.append("danhGia", formValues.danhGia);
-        formData.append("hinhAnh", formValues.hinhAnh[0]);
-        handleAddMovie(formData);
+        console.log("formValues", formValues.filename[0])
+        const formData = new FormData()
+        formData.append("title", formValues.title)
+        formData.append("description", formValues.description)
+        formData.append("user_id", formValues.user_id)
+        formData.append("category_id", formValues.category_id)
+        // formData.append("filename", previewImage(file?.[0]))
+        // disPatch(upLoadFile(formValues.filename))
+        formData.append("filename", file)
+        formData.append("countlike", formValues.countlike)
+        handleAddPost(formData);
     };
 
-    const previewImage = (file) => {
-        return URL.createObjectURL(file);
-    };
 
-    useEffect(() => {
-        if (file?.length > 0) {
-            console.log("previewImage", previewImage(file?.[0])); // url
-        }
-    }, [file]);
+
+    // useEffect(() => {
+    //     if (file?.length > 0) {
+    //         console.log("previewImage", previewImage(file?.[0])); // url
+    //     }
+    // }, [file]);
 
     console.log(file);
     return (
@@ -144,40 +169,125 @@ export const PostForm = () => {
                     container
                     justifyContent={"center"}
                     alignItems={"center"}
-                    sx={{ marginTop: 20 }}
+                    sx={{ marginTop: 20, marginBottom: 20 }}
+                    fullWidth
                 >
+                    <div className=''>
+                        {!file && (
+                            <UploadButton uploader={uploader}
+                                options={options}
+                                onComplete={
+                                    files => {
+                                        files.map(x => {
+                                            console.log('x: ', x.originalFile)
+                                            // disPatch(upLoadFile(x.originalFile))
+                                            // setValue('filename', x.originalFile.fileUrl)
+                                            setValue("filename", x.originalFile.fileUrl)
+                                            // setFormValue({ ...formValue, filename: x.originalFile.fileUrl })
+                                            // console.log('formValue: ', formValue)
+                                        })
+                                    }
+                                }
+
+                            // {...register("filename")}
+
+                            >
+
+                                {({ onClick }) =>
+                                    <Button className='' sx={{ width: '300px', height: '350px',marginRight:'1rem' }} variant='outlined' onClick={onClick}>
+                                        Tải tệp lên...
+                                    </Button>
+
+                                }
+
+                            </UploadButton>
+                        )}
+                        {file?.length > 0 && (
+                            <div className='d-flex flex-column mr-4' >
+                                <img src={file} className=' rounded' width={500} height={300} />
+                                <Button onClick={() => setValue("filename", undefined)}>
+                                    Xoá tệp
+                                </Button>
+                            </div>
+                        )}
+                    </div>
+                    {/* <div className=' ' style={{
+                        width: '100%'
+                    }}>
+                        <UploadButton uploader={uploader}
+                            options={options}
+                            onComplete={
+                                files => {
+                                    files.map(x => {
+                                        console.log('x: ', x.originalFile)
+                                        // disPatch(upLoadFile(x.originalFile))
+                                        // setValue('filename', x.originalFile.fileUrl)
+                                        setValue("filename", x.originalFile.fileUrl)
+                                        setFormValue({ ...formValue, filename: x.originalFile.fileUrl })
+                                        console.log('formValue: ', formValue)
+                                    })
+                                }
+                            }
+
+                        // {...register("filename")}
+
+                        >
+
+                            {({ onClick }) =>
+                                <button className='btn btn-info' onClick={onClick}>
+                                    Tải tệp lên...
+                                </button>
+
+                            }
+
+                        </UploadButton>
+
+                        
+                    </div> */}
+                    {/* <img src="" alt="" /> */}
                     <Grid item md={6}>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <Stack direction={"column"} spacing={3}>
+                        <form onSubmit={handleSubmit(onSubmit)} style={{
+                            width: '100%',
+                            // display:'flex',
+                            // backgroundColor:'red'
+                        }}>
+
+                            <Stack direction={"column"} spacing={3} fullWidth>
                                 <TextField
                                     label="Tiêu đề"
                                     fullWidth
                                     {...register("title")}
+                                    error={Boolean(errors.title)}
+                                    helperText={Boolean(errors.title) && errors.title.message}
                                 />
-                                <TextField label="Mô tả" fullWidth {...register("moTa")} />
-                                <TextField label="Nội dung" {...register("content")} />
-                                {!file && (
-                                    <Button
-                                        component="label"
-                                        variant="contained"
-                                        startIcon={<CloudUploadIcon />}
-                                    >
-                                        Tải lên
-                                        <VisuallyHiddenInput
-                                            type="file"
-                                            {...register("hinhAnh")}
-                                            accept=".png,.gif,.jpg"
-                                        />
-                                    </Button>
-                                )}
-                                {file?.length > 0 && (
-                                    <>
-                                        <img src={previewImage(file[0])} width={240} />
-                                        <Button onClick={() => setValue("hinhAnh", undefined)}>
-                                            Xoá hình
-                                        </Button>
-                                    </>
-                                )}
+                                {/* <TextField label="Mô tả" fullWidth {...register("moTa")} /> */}
+                                <TextField label="Nội dung"
+                                    multiline
+                                    rows={4}
+                                    {...register("description")}
+                                    error={Boolean(errors.description)}
+                                    helperText={Boolean(errors.description) && errors.description.message}
+                                />
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Ngành</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        label="nganh"
+                                        {...register("category_id")}
+                                        error={Boolean(errors.category_id)}
+                                        helperText={Boolean(errors.category_id) && errors.category_id.message}
+                                    >{
+                                            listCategory?.map((cate) => {
+                                                return (
+                                                    <MenuItem key={cate.id} value={cate.id}>{cate.name}</MenuItem>
+                                                )
+                                            })
+                                        }
+
+                                    </Select>
+                                </FormControl>
+
                                 <LoadingButton
                                     loading={isPending}
                                     variant="contained"
@@ -269,7 +379,7 @@ export const PostForm = () => {
 
             {/* /////////////////// */}
 
-            <form action="" className='container '
+            <form action="" className='d-no ne container '
 
             >
                 <h2 className='text-center mt-5 mb-4' style={{
@@ -319,9 +429,9 @@ export const PostForm = () => {
                             options={options}
                             onComplete={files => {
                                 files.map(x => {
-                                    console.log('x: ', x.originalFile.originalFileName)
-                                    disPatch(upLoadFile(x.originalFile))
-                                    setFormValue({ ...formValue, filename: x.originalFile.originalFileName })
+                                    console.log('x: ', x.originalFile)
+                                    // disPatch(upLoadFile(x.originalFile))
+                                    setFormValue({ ...formValue, filename: x.originalFile.fileUrl })
                                     console.log('formValue: ', formValue);
                                 })
                             }}

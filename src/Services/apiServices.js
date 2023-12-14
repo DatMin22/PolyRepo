@@ -51,6 +51,18 @@ export const register = (url, data) => {
 
 }
 
-
+export const addPost = async (formValue) => {
+    try {
+        const response = await axios.post(
+            `http://localhost:8080/posts/add`,
+            formValue,
+            { headers: { 'Content-Type': 'application/json' } }
+        )
+        return response.data.data
+        // console.log("response", response)
+    } catch (error) {
+        console.log("error", error);
+    }
+}
 
 

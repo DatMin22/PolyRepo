@@ -291,7 +291,7 @@ export const PostList = () => {
                                 handleOpen()
                             }}
                         >
-                            <img src={"./images/" + post.filename} className='card-img-top' alt="" />
+                            <img src={post.filename} className='card-img-top' alt="" />
                             <div className="card-body">
                                 <h1 className="card-title" style={{ fontSize: '1.4rem' }}>{post.title}</h1>
                             </div>
