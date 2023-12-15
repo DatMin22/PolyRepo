@@ -64,5 +64,38 @@ export const addPost = async (formValue) => {
         console.log("error", error);
     }
 }
+export const addUser = (payload) => {
+    post(
+        '/signup',
+        payload
+    )
+        .then((resp) => {
+            console.log('res: ', resp.data)
 
+
+        })
+        .catch((error) => {
+            console.log('error: ', error);
+            alert("Đã có lỗi xảy ra. Đăng ký thất bại")
+
+        })
+
+}
+export const getUserById = (id) => {
+    get(
+        `/user/${id}`,
+
+    )
+        .then((resp) => {
+            console.log('res: ', resp.data)
+
+
+        })
+        .catch((error) => {
+            console.log('error: ', error);
+            alert("Đã có lỗi xảy ra")
+
+        })
+
+}
 

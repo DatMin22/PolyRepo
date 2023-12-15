@@ -5,8 +5,9 @@ import { Typography } from '@mui/material'
 
 export const LikeManagement = () => {
   return (
-    <div className='' style={{paddingTop:'5rem'}}>
-            <Typography component={'h1'} className=''>Like Management</Typography>
+    <div className='bg' style={{ paddingTop: '5rem' }}>
+      <Typography className='text-center heading'>Quản lý lượt thích</Typography>
+      <Typography className='text-center title'>Xin chào, tôi là ....., chào mừng bạn đến với trang quản lý lượt thích.</Typography>
 
       {/* <LikeForm /> */}
       <LikeTable />

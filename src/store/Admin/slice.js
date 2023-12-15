@@ -7,12 +7,39 @@ const baseURL = 'http://localhost:8080'
 const initialState = {
     userList: [],
     userEdit: undefined,
+
 }
 export const getUsersList = createAsyncThunk("user/getAll", async () => {
     try {
         const response = await axios.get(`${baseURL}/user/getAll`)
         console.log("response", response)
         return response.data.data
+    } catch (error) {
+        console.log("error", error);
+    }
+})
+export const getUserById = createAsyncThunk("user/getUserById", async (id) => {
+    try {
+        const response = await axios.get(`${baseURL}/user/${id}`,
+            // {
+            //     params: {
+            //         id: id,
+            //     },
+            // }
+            )
+        console.log("response", response)
+        return response.data
+    } catch (error) {
+        console.log("error", error);
+    }
+})
+export const updateUser = createAsyncThunk("user/update", async (id, data) => {
+    try {
+        const response = await apiServices.put(`${baseURL}/user/update/${id}`,
+            data
+        )
+        console.log("updateUser", response)
+        return response.data
     } catch (error) {
         console.log("error", error);
     }
@@ -113,8 +140,12 @@ const AdminSlice = createSlice({
     extraReducers(builder) {
         builder.addCase(getUsersList.fulfilled, (state, { payload }) => {
             // state.isLoading = false;
-            console.log('payload: ', payload);
+            console.log('payload: ', payload)
             state.userList = payload;
+        })
+        builder.addCase(getUserById.fulfilled, (state, { payload }) => {
+            console.log('userEdit: ', payload)
+            state.userEdit = payload;
         })
     }
 })

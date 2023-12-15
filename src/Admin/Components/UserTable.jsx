@@ -3,7 +3,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { adminActions, getUsersList } from '../../store/Admin/slice'
 import * as apiServices from '../../Services/apiServices'
 import { useEffect } from 'react'
+import * as yup from "yup"
 import { DataGrid } from '@mui/x-data-grid'
+import { Box, Button, FormControl, Grid, InputLabel, Modal, Select, Stack, TextField, Typography } from '@mui/material'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { LoadingButton } from '@mui/lab'
 // import { getUsersList } from '../../store/Admin/slice'
 const columns = [
     { field: 'id', headerName: 'ID', width: 70 },
@@ -14,11 +20,13 @@ const columns = [
         headerName: 'role',
         // type: 'number',
         width: 100,
+        type: 'singleSelect',
+        valueOptions: ['user', 'admin'],
+        editable: true,
     },
     {
         field: 'action',
         headerName: 'Hành động',
-        description: 'This column has a value getter and is not sortable.',
         sortable: false,
         width: 160,
         // valueGetter: (params) =>
@@ -39,10 +47,66 @@ const columns = [
 // ];
 
 export const UserTable = () => {
-
+    const schemaSignup = yup.object({
+        username: yup
+            .string()
+            .required("Vui lòng nhập tài khoản")
+            .min(10, "Tài khoản ít nhất 6 ký tự")
+            .max(20, "Tài khoản không vượt quá 8 ký tự"),
+        password: yup
+            .string()
+            .required("Vui lòng nhập mật khẩu")
+        ,
+        email: yup
+            .string()
+            .required('Vui lòng nhập email')
+    })
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '50%',
+        // height:600,
+        bgcolor: 'background.paper',
+        borderRadius: '10px',
+        boxShadow: 24,
+        p: 4,
+    };
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
     const { userList } = useSelector((state) => state.admin)
     console.log('userList: ', userList)
     const dispatch = useDispatch()
+    const { handleSubmit, formState: { errors }, register, control, setValue, watch } = useForm({
+        defaultValues: {
+            username: '',
+            password: '',
+            email: '',
+            role_id: 2
+        }, resolver: yupResolver(schemaSignup),
+        mode: "all",
+    });
+
+
+    // useQuery({ queryKey: ["list-movie-admin"]})
+    const { mutate: handleAddUser, isPending } = useMutation({
+        mutationFn: (payload) => apiServices.addUser(payload),
+        onSuccess: () => {
+            // call api get list
+            // queryClient.invalidateQueries({ queryKey: ["list-movie"] });
+        },
+    });
+
+    const onSubmit = (formValues) => {
+        const formData = new FormData()
+        formData.append("username", formValues.username)
+        formData.append("password", formValues.password)
+        formData.append("email", formValues.email)
+        formData.append("role_id", formValues.role_id)
+        handleAddUser(formData);
+    };
     // Get all users
     useEffect(() => {
         dispatch(getUsersList())
@@ -52,8 +116,19 @@ export const UserTable = () => {
 
     return (
         <>
-            <div style={{ height: 400, width: '50%', margin: '0 auto' }}>
+            <div style={{ height: 400, width: '70%', margin: '0 auto' }}>
+                <Button
+                    id='btn'
+                    onClick={handleOpen}
+                    sx={{ padding: '.7rem', backgroundColor: '#fff', color: '#1f2937', alignItems: ' end' }}
+                    variant='contained'>
+                    <i class='bx bx-plus-circle '
+                        style={{ fontSize: '1.7rem', paddingRight: '.2rem' }}></i>
+                    Thêm người dùng
+                </Button>
                 <DataGrid
+                    className='table'
+
                     rows={userList}
                     columns={columns}
                     initialState={{
@@ -62,10 +137,85 @@ export const UserTable = () => {
                         },
                     }}
                     pageSizeOptions={[5, 10]}
+                    // rowSelection={false}
                     checkboxSelection
                 />
             </div>
 
+            {/* FORM THÊM NGƯỜI DÙNG */}
+            <div>
+                <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                    sx={{ border: 'none', outline: 'none' }}
+                >
+                    <Box sx={style}>
+
+                        <Typography component={'h1'} fontSize={'2rem'} textAlign={'center'} paddingBottom={'2rem'}>
+                            Thêm người dùng
+                        </Typography>
+
+                        <form
+                            onSubmit={handleSubmit(onSubmit)}
+                            style={{
+                                width: '100%',
+                            }}>
+
+                            <Stack direction={"column"} spacing={3} fullWidth>
+                                <TextField
+                                    label="Tên người dùng"
+                                    fullWidth
+                                    {...register("username")}
+                                    error={Boolean(errors.username)}
+                                    helperText={Boolean(errors.username) && errors.username.message}
+                                />
+                                <TextField label="Email"
+
+                                    {...register("email")}
+                                    error={Boolean(errors.email)}
+                                    helperText={Boolean(errors.email) && errors.email.message}
+                                />
+                                <TextField label="Mật khẩu"
+                                    type='password'
+                                    {...register("password")}
+                                    error={Boolean(errors.password)}
+                                    helperText={Boolean(errors.password) && errors.password.message}
+                                />
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Vai trò</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        label="vaitro"
+                                        {...register("role_id")}
+                                    // error={Boolean(errors.category_id)}
+                                    // helperText={Boolean(errors.category_id) && errors.category_id.message}
+                                    >{
+                                            // listCategory?.map((cate) => {
+                                            //     return (
+                                            //         <MenuItem key={cate.id} value={cate.id}>{cate.name}</MenuItem>
+                                            //     )
+                                            // })
+                                        }
+
+                                    </Select>
+                                </FormControl>
+
+                                <LoadingButton
+                                    loading={isPending}
+                                    variant="contained"
+                                    size="large"
+                                    type="submit"
+                                >
+                                    ĐĂNG BÀI
+                                </LoadingButton>
+                            </Stack>
+                        </form>
+                    </Box>
+                </Modal>
+            </div>
             {/* **************** */}
             <div className='p-4 sm:ml-64 d-none'>
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">

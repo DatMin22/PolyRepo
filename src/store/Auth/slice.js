@@ -75,8 +75,6 @@ const authSlice = createSlice({
             )
                 .then((resp) => {
                     console.log('res: ', resp.data)
-                    $('#loginModal').modal('show')
-                    $('#registerModal').modal('hide')
 
 
                 })

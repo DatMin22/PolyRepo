@@ -33,6 +33,7 @@ export const CommentTable = () => {
         <>
             <Container style={{ height: 400, width: '70%', margin: '0 auto' }}>
                 <DataGrid
+                className='table'
                     rows={commentList}
                     columns={columns}
                     initialState={{

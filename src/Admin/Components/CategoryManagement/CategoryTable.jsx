@@ -28,6 +28,7 @@ export const CategoryTable = ({ }) => {
         <>
             <Container style={{ height: 400, width: '100%', margin: '0 auto' }}>
                 <DataGrid
+                className='table'
                     rows={listCategory}
                     columns={columns}
                     initialState={{

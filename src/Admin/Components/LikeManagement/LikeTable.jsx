@@ -38,6 +38,8 @@ export const LikeTable = () => {
         <>
             <div style={{ height: 400, width: '50%', margin: '0 auto' }}>
                 <DataGrid
+                className='table'
+
                     rows={listLike}
                     columns={columns}
                     initialState={{

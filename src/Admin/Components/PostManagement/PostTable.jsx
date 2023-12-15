@@ -45,6 +45,8 @@ export const PostTable = () => {
         <>
             <div style={{ width: '80%', margin: '0 auto' }}>
                 <DataGrid
+                className='table'
+
                     rows={postList}
                     columns={columns}
                     initialState={{

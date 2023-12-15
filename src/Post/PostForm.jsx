@@ -103,7 +103,7 @@ export const PostForm = () => {
     const previewImage = (file) => {
         return URL.createObjectURL(file);
     };
-    const queryClient = useQueryClient();
+    // const queryClient = useQueryClient();
     const { handleSubmit, formState: { errors }, register, control, setValue, watch } = useForm({
         defaultValues: {
             // tenPhim: "",
@@ -379,7 +379,7 @@ export const PostForm = () => {
 
             {/* /////////////////// */}
 
-            <form action="" className='d-no ne container '
+            <form action="" className='d-none container '
 
             >
                 <h2 className='text-center mt-5 mb-4' style={{

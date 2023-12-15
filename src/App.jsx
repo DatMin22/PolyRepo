@@ -72,6 +72,7 @@ function App() {
           <Route index element={<Dashboards />} />
           <Route path={PATH.POSTS_MANAGEMENT} element={<PostManagement />} />
           <Route path={PATH.USERS_MANAGEMENT} element={<User />} />
+          {/* <Route path={`${PATH.USERS_MANAGEMENT}/:id`} element={<User />} /> */}
           <Route path={PATH.COMMENTS_MANAGEMENT} element={<CommentManagement />} />
           <Route path={PATH.LIKES_MANAGEMENT} element={<LikeManagement />} />
           <Route path={PATH.SHARES_MANAGEMENT} element={<ShareManagement />} />
