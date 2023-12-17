@@ -9,7 +9,8 @@ const initialState = {
     commentListByPostID: [],
     fileUpload: '',
     postEdit: undefined,
-    listGetPostById: {}
+    listGetPostById: {},
+    listPostByUserId: []
 }
 
 const baseURL = 'http://localhost:8080'
@@ -44,6 +45,20 @@ export const getPostById = createAsyncThunk("getPostById", async (id) => {
 
         )
         console.log('response getPostById: ', response);
+        return response.data.data
+        // console.log("response", response)
+    } catch (error) {
+        console.log("error", error);
+    }
+})
+export const getPostByUserId = createAsyncThunk("getPostByUserId", async (id) => {
+    try {
+        const response = await axios.get(
+            `${baseURL}/posts/user/${id}`,
+            // { headers: { 'Content-Type': 'application/json' } }
+
+        )
+        console.log('response getPostByUserId: ', response);
         return response.data.data
         // console.log("response", response)
     } catch (error) {
@@ -189,6 +204,13 @@ const postSlice = createSlice({
         builder.addCase(getPostById.fulfilled, (state, { payload }) => {
             console.log('payload: ', payload);
             state.listGetPostById = payload
+
+
+        })
+        // *listPostByUserId
+        builder.addCase(getPostByUserId.fulfilled, (state, { payload }) => {
+            console.log('payload listPostByUserId: ', payload)
+            state.listPostByUserId = payload
 
 
         })

@@ -26,7 +26,7 @@ export const getUserById = createAsyncThunk("user/getUserById", async (id) => {
             //         id: id,
             //     },
             // }
-            )
+        )
         console.log("response", response)
         return response.data
     } catch (error) {
@@ -35,13 +35,25 @@ export const getUserById = createAsyncThunk("user/getUserById", async (id) => {
 })
 export const updateUser = createAsyncThunk("user/update", async (id, data) => {
     try {
-        const response = await apiServices.put(`${baseURL}/user/update/${id}`,
-            data
-        )
-        console.log("updateUser", response)
+        // const response = await axios.put(`${baseURL}/user/update/${id}`,
+        //     JSON.stringify(data),
+        //     { headers: { 'content-type': 'application/json' } }
+        // )
+        // console.log("updateUser", response)
+        const response = await fetch(`${baseURL}/user/update/${id}`, {
+            method: "PUT",
+            body: JSON.stringify(data),
+            // header là json
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        console.log('response: ', response)
+
         return response.data
     } catch (error) {
-        console.log("error", error);
+        console.log('data: ', data)
+        console.log("error", error)
     }
 })
 
@@ -146,6 +158,12 @@ const AdminSlice = createSlice({
         builder.addCase(getUserById.fulfilled, (state, { payload }) => {
             console.log('userEdit: ', payload)
             state.userEdit = payload;
+        })
+        builder.addCase(updateUser.fulfilled, (state, { payload }) => {
+            console.log('updateUser: ', payload)
+        })
+        builder.addCase(updateUser.rejected, (state) => {
+            alert('lỗi rồi🤕🤕')
         })
     }
 })

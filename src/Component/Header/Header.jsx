@@ -54,7 +54,11 @@ export const Header = () => {
         localStorage.setItem('currentUser', JSON.stringify(userIslogin))
         setCurrentUser(userIslogin)
     }
-
+    // const cuUser = JSON.parse(localStorage.getItem('currentUser'))
+    useEffect(() => {
+        // Hàm callback sẽ được thực thi sau khi component render lần đầu tiên, hoặc sau khi các giá trị phụ thuộc của nó thay đổi.
+        // setCurrentUser(JSON.parse(localStorage.getItem('currentUser')))
+    }, [currentUser])
 
     const pages = ['Products', 'Pricing', 'Blog'];
     const settings =
@@ -68,9 +72,14 @@ export const Header = () => {
             }}>
                 Quản trị
             </Link >,
-            <Link to={PATH.PROFILE} style={{ color: '#000', textAlign: 'center' }}>
+            <span
+                // to={PATH.PROFILE}
+                style={{ color: '#000', textAlign: 'center' }}
+                onClick={() => {
+                    navigate(`/${PATH.PROFILE}?username=${currentUser?.name}`);
+                }}>
                 Tài khoản
-            </Link>,
+            </span>,
             <Link to={'/changePass'} style={{ color: '#000', textAlign: 'center' }}>
                 Đổi mật khẩu
             </Link>,

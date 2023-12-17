@@ -99,3 +99,33 @@ export const getUserById = (id) => {
 
 }
 
+
+
+const url = "http://localhost:8080/user/update/1";
+
+const data = {
+    name: "JaneDoe111",
+    roleId: 2,
+    email: "nguyenvana@gmail.com",
+};
+export const updateUser = (id, data) => {
+    fetch(`http://localhost:8080/user/update/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+        // header là json
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then((response) => {
+            console.log('response: ', response);
+            // Xử lý kết quả của yêu cầu
+
+            alert('done')
+        })
+        .catch((error) => {
+            console.log('error: ', error);
+            // Xử lý lỗi
+            alert('error')
+        })
+}

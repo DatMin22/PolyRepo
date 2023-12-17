@@ -6,6 +6,7 @@ export const PATH = {
     FORGET_CHANGE_PASSWORD: '/forgot-change-password',
     CHANGE_PASSWORD: '/change-password',
     DASHBOARD: '/admin',
+    EDIT_PROFILE: 'editProfile',
     PROFILE: 'profile',
     USERS_MANAGEMENT: 'user-management',
     POSTS_MANAGEMENT: 'post-management',

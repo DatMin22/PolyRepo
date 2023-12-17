@@ -22,9 +22,10 @@ import { CategoryManagement } from './Admin/Components/CategoryManagement/Catego
 import { Dashboards } from './Admin/Components/Dashboards/Dashboards'
 import { ForgotPass } from './modules/ForgotPass/ForgotPass'
 import { ForgotPassToken } from './modules/ForgotPass/ForgotPassToken'
-import { UserProfile } from './modules/UserProfile/UserProfile'
 import ChangePass from './modules/ChangePass/ChangePass'
 import { PATH } from './constants/paths'
+import { EditUserProfile } from './modules/UserProfile/EditUserProfile'
+import { UserProfile } from './modules/UserProfile/UserProfile'
 function App() {
 
   // login()
@@ -53,6 +54,8 @@ function App() {
           <Route path='uploadPost' element={<PostForm />} />
           <Route path={PATH.CHANGE_PASSWORD} element={<ChangePass />} />
 
+          {/* <Route path={`${PATH.PROFILE}/:username`} element={<UserProfile />} /> */}
+          <Route path={PATH.EDIT_PROFILE} element={<EditUserProfile />} />
           <Route path={PATH.PROFILE} element={<UserProfile />} />
 
 

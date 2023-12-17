@@ -135,3 +135,7 @@ ul > li {
   border: none;
   outline: none;
 }
+#tab:focus {
+  border: none;
+  outline: none;
+}

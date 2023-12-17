@@ -1,5 +1,5 @@
 // import styled from '@emotion/styled';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import MuiAppBar from '@mui/material/AppBar'
@@ -65,7 +65,15 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export const HeaderAdmin = () => {
     const { isLogin, userLogin, userIslogin } = useSelector(state => state.auth)
     console.log('isLogin: ', isLogin)
+    // const [currentUser, setCurrentUser] = useState(() => {
+    //     return localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null
 
+    // })
+    // const cuUser = JSON.parse(localStorage.getItem('currentUser'))
+    // useEffect(() => {
+    //     // Hàm callback sẽ được thực thi sau khi component render lần đầu tiên, hoặc sau khi các giá trị phụ thuộc của nó thay đổi.
+    //     setCurrentUser(cuUser)
+    // }, [cuUser]);
     console.log('userIslogin: ', userIslogin);
     const theme = useTheme();
     const [open, setOpen] = useState(false);
@@ -77,14 +85,14 @@ export const HeaderAdmin = () => {
     const handleDrawerClose = () => {
         setOpen(false);
     };
-    
+
     const settings =
         [
             <Link style={{ color: '#000', textAlign: 'center' }}>
-                {userIslogin?.name}
+                {currentUser?.name}
             </Link >,
             <Link Link to={PATH.DASHBOARD} style={{
-                display: userIslogin?.roleId == 1 ? "block" : "none",
+                display: currentUser?.roleId == 1 ? "block" : "none",
                 color: '#000', textAlign: 'center'
             }}>
                 Quản trị
