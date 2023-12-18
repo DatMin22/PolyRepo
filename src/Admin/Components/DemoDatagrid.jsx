@@ -21,16 +21,17 @@ import {
 } from '@mui/x-data-grid-generator';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserById, getUsersList, updateUser } from '../../store/Admin/slice';
+import { getUserById, getUsersList } from '../../store/Admin/slice';
 import { FormControl, InputLabel, Modal, Select, Stack, TextField, Typography } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
-import { addUser } from '../../Services/apiServices';
+import { addUser, updateUser } from '../../Services/apiServices';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from "yup"
 import { LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '../../constants/paths';
+import { useState } from 'react';
 const roles = ['Market', 'Finance', 'Development'];
 const randomRole = () => {
     return randomArrayItem(roles);
@@ -107,8 +108,8 @@ export default function DemoDatagrid() {
         username: yup
             .string()
             .required("Vui lòng nhập tài khoản")
-            .min(10, "Tài khoản ít nhất 6 ký tự")
-            .max(20, "Tài khoản không vượt quá 8 ký tự"),
+            .min(6, "Tài khoản ít nhất 6 ký tự")
+            .max(8, "Tài khoản không vượt quá 8 ký tự"),
         password: yup
             .string()
             .required("Vui lòng nhập mật khẩu")
@@ -143,11 +144,14 @@ export default function DemoDatagrid() {
     // useQuery({ queryKey: ["list-movie-admin"]})
     const { mutate: handleAddUser, isPending } = useMutation({
         mutationFn: (payload) => addUser(payload),
-        onSuccess: () => {
+        onSuccess: (data) => {
+            // console.log('data: ', data)
             // call api get list
+            // dispatch(getUsersList())
+
             // queryClient.invalidateQueries({ queryKey: ["list-movie"] });
         },
-    });
+    })
 
     const onSubmit = (formValues) => {
         const formData = new FormData()
@@ -155,7 +159,8 @@ export default function DemoDatagrid() {
         formData.append("password", formValues.password)
         formData.append("email", formValues.email)
         formData.append("role_id", formValues.role_id)
-        handleAddUser(formData);
+        handleAddUser(formData)
+
     };
     // Get all users
     useEffect(() => {
@@ -164,7 +169,8 @@ export default function DemoDatagrid() {
     }
         , [])
     const navigate = useNavigate()
-    const [rows, setRows] = React.useState(userList);
+    const [rows, setRows] = useState(userList);
+    console.log('rows: ', rows)
     const [rowModesModel, setRowModesModel] = React.useState({});
 
     const handleRowEditStop = (params, event) => {
@@ -173,28 +179,22 @@ export default function DemoDatagrid() {
         }
     };
     const handleEditClick = (id) => () => {
-        // dispatch(getUserById(id))
-        // navigate(`?id=${id}`, () => {
-        //     // Sử dụng tham số trong hàm callback
-        // });
-        // navigate(`${id}`)
 
-        // const a = document.getElementById('username').innerHTML = userEdit?.name
-        // console.log('a: ', a);
 
-        // setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } })
-        handleOpen()
+        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } })
     };
 
     const handleSaveClick = (id) => () => {
-        console.log('id: ', id)
-        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } })
-        console.log('rows: ', GridRowModes)
-    };
+        setRowModesModel({
+            ...rowModesModel,
+            [id]: { mode: GridRowModes.View },
+        })
+        dispatch(getUsersList())
+    }
 
     const handleDeleteClick = (id) => () => {
         setRows(rows.filter((row) => row.id !== id))
-    };
+    }
 
     const handleCancelClick = (id) => () => {
         setRowModesModel({
@@ -203,37 +203,42 @@ export default function DemoDatagrid() {
         });
 
         const editedRow = rows.find((row) => row.id === id);
-        console.log('editedRow: ', editedRow)
+        // console.log('editedRow: ', editedRow)
         // if (editedRow.isNew) {
         setRows(rows.filter((row) => row.id !== id));
+        dispatch(getUsersList())
+
         // }
     };
 
     const processRowUpdate = (newRow) => {
         const updatedRow = { ...newRow };
         console.log('updatedRow: ', updatedRow)
+        setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)))
         dispatch(updateUser(updatedRow.id,
             {
-                "name": "nguyenvanb",
-                "roleId": '2',
-                "email": "nguyenvanb@gmail.com"
+                name: updatedRow.name,
+                roleId: updatedRow.roleId,
+                email: updatedRow.email
             }))
-        setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+        console.log('rows: ', rows)
+
         return updatedRow;
     };
 
     const handleRowModesModelChange = (newRowModesModel) => {
+        console.log('newRowModesModel: ', newRowModesModel);
         setRowModesModel(newRowModesModel);
     };
 
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 180, editable: true },
+        { field: 'id', headerName: 'ID', width: 100, editable: true },
         {
             field: 'name',
             headerName: 'Tên người dùng',
             type: 'string',
-            width: 180,
+            width: 220,
             align: 'left',
             headerAlign: 'left',
             editable: true,
@@ -242,7 +247,7 @@ export default function DemoDatagrid() {
             field: 'email',
             headerName: 'Email',
             type: 'string',
-            width: 180,
+            width: 300,
             editable: true,
         },
         {
@@ -305,16 +310,8 @@ export default function DemoDatagrid() {
 
     return (
         <Box
-            sx={{
-                height: 500,
-                width: '100%',
-                '& .actions': {
-                    color: 'text.secondary',
-                },
-                '& .textPrimary': {
-                    color: 'text.primary',
-                },
-            }}
+
+            style={{ width: '70%', margin: '0 auto' }}
         >
             <Button
                 id='btn'
@@ -325,7 +322,17 @@ export default function DemoDatagrid() {
                     style={{ fontSize: '1.7rem', paddingRight: '.2rem' }}></i>
                 Thêm người dùng
             </Button>
+            <Button
+                id='btn'
+                className='btnupdate'
+                onClick={() => { dispatch(getUsersList()) }}
+                sx={{ padding: '.7rem', backgroundColor: '#fff', color: '#1f2937', alignItems: ' end' }}
+                variant='contained'>
+                <i class='bx bx-refresh'
+                    style={{ fontSize: '1.7rem', paddingRight: '.2rem' }}></i>
+            </Button>
             <DataGrid
+                className='table'
 
                 rows={userList}
                 columns={columns}
@@ -335,12 +342,18 @@ export default function DemoDatagrid() {
                 onRowModesModelChange={handleRowModesModelChange}
                 onRowEditStop={handleRowEditStop}
                 processRowUpdate={processRowUpdate}
-                slots={{
-                    toolbar: EditToolbar,
-                }}
+                // slots={{
+                //     toolbar: EditToolbar,
+                // }}
                 slotProps={{
                     toolbar: { setRows, setRowModesModel },
                 }}
+                initialState={{
+                    pagination: {
+                        paginationModel: { page: 0, pageSize: 5 },
+                    },
+                }}
+                pageSizeOptions={[5, 10]}
             />
 
             {/* FORM THÊM NGƯỜI DÙNG */}
@@ -378,7 +391,7 @@ export default function DemoDatagrid() {
                                     value={userEdit?.email}
                                     id='email'
 
-                                    // {...register("email")}
+                                    {...register("email")}
                                     error={Boolean(errors.email)}
                                     helperText={Boolean(errors.email) && errors.email.message}
                                 />

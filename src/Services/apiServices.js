@@ -121,7 +121,7 @@ export const updateUser = (id, data) => {
             console.log('response: ', response);
             // Xử lý kết quả của yêu cầu
 
-            alert('done')
+            // alert('done')
         })
         .catch((error) => {
             console.log('error: ', error);
