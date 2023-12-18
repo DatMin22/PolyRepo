@@ -1,12 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import * as apiServices from '../../Services/apiServices'
 import axios from "axios"
+import { Navigate, useNavigate } from "react-router-dom"
+import { PATH } from "../../constants/paths"
 
 
 const initialState = {
     isLogin: false,
     userLogin: '',
-    userIslogin: ''
+    userIslogin: '',
+    userToken: null
 }
 
 const baseURL = 'http://localhost:8080'
@@ -18,13 +21,17 @@ export const login = createAsyncThunk("login", async (data) => {
             data,
             { headers: { 'content-type': 'application/x-www-form-urlencoded' } }
         )
-        // return response.data.statusCode
-        // alert('Đăng nhập thành công.')
-        // getUserByEmail(data.email)
-        // console.log("response", response)
-        return data
+        // if (response.status == 200) {
+        //     // localStorage.setItem('userToken', response.data.data)
+        //     //     // <Navigate to="/" replace={true} />
+        //     //     alert('dn thanh cong')
+        // }
+
+        console.log("response login", response)
+        return response.data.data
     } catch (error) {
-        console.log("error", error);
+        throw new error
+
     }
 })
 export const getUserByEmail = createAsyncThunk("getUserByEmail", async (email) => {
@@ -38,7 +45,7 @@ export const getUserByEmail = createAsyncThunk("getUserByEmail", async (email) =
         console.log("response", response.data.data)
         return response.data.data
     } catch (error) {
-        console.log("error", error);
+        // throw new error
     }
 })
 const authSlice = createSlice({
@@ -107,10 +114,13 @@ const authSlice = createSlice({
         builder.addCase(login.pending, (state) => {
         })
         builder.addCase(login.fulfilled, (state, { payload }) => {
-            state.userLogin = payload
+            if (payload !== null && payload !== undefined) {
+                localStorage.setItem('userToken', payload)
+                state.isLogin = true
 
-            // console.log('state.userLogin: ', state.userLogin)
-            state.isLogin = true
+            }
+
+
 
 
         })

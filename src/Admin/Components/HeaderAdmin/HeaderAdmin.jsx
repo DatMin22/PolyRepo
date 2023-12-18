@@ -14,7 +14,8 @@ import { useState } from 'react'
 import { styled, useTheme } from '@mui/material/styles'
 import SearchIcon from '@mui/icons-material/Search'
 import { PATH } from '../../../constants/paths'
-import { currentUser } from '../../../modules/auththen/auththen'
+import { authActions } from '../../../store/Auth/slice'
+// import { currentUser } from '../../../modules/auththen/auththen'
 const drawerWidth = 240;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -65,10 +66,10 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export const HeaderAdmin = () => {
     const { isLogin, userLogin, userIslogin } = useSelector(state => state.auth)
     console.log('isLogin: ', isLogin)
-    // const [currentUser, setCurrentUser] = useState(() => {
-    //     return localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null
+    const [currentUser, setCurrentUser] = useState(() => {
+        return localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null
 
-    // })
+    })
     // const cuUser = JSON.parse(localStorage.getItem('currentUser'))
     // useEffect(() => {
     //     // Hàm callback sẽ được thực thi sau khi component render lần đầu tiên, hoặc sau khi các giá trị phụ thuộc của nó thay đổi.

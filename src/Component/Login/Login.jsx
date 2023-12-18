@@ -5,7 +5,7 @@ import { authActions, getUserByEmail, login } from '../../store/Auth/slice'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { Cookies, useCookies } from 'react-cookie'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, Navigate, redirect, useNavigate } from 'react-router-dom'
 import { getLikeByUserId } from '../../store/Like/slice'
 import { Box, Button, Checkbox, Container, CssBaseline, FormControlLabel, Grid, Paper, Stack, TextField, Typography } from '@mui/material'
 import styled from '@emotion/styled'
@@ -20,19 +20,27 @@ export const Login = () => {
 
     const [cookies, setCookie, removeCookie] = useCookies(['user']);
 
-    const { userLogin, isLogin, userIslogin } = useSelector((state) => state.auth)
-    console.log('isLogin: ', isLogin)
+    const { userLogin, isLogin, userIslogin, userToken } = useSelector((state) => state.auth)
+    console.log('isLogin: ', isLogin);
+    console.log('userToken: ', userToken?.length);
+    // console.log('isLogin: ', isLogin)
     console.log('userIslogin: ', userIslogin)
-    console.log('currentUser: ', currentUser)
-    if (currentUser !== null || isLogin == true) {
-        return <Navigate to={PATH.HOME} />
-    }
+    // console.log('currentUser: ', currentUser)
     const [formValue, setFormValue] = useState({
         email: '',
         password: '',
 
 
     })
+    if (currentUser !== null && isLogin == true) {
+
+        return <Navigate to={PATH.HOME} />
+    }
+    // if (userToken?.length > 0 && isLogin == true) {
+    //     dispatch(getUserByEmail(formValue.email))
+    //     return <Navigate to={PATH.HOME} />
+    // }
+
     // state validate form
     const [formError, setFormError] = useState({
         email: '',
@@ -113,20 +121,21 @@ export const Login = () => {
     // if (currentUser) {
     // userIslogin = currentUser
     // }
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get("email"),
-            password: data.get("password"),
-        });
-    };
+
     const CustomButton = styled(Button)({
         backgroundColor: '#1F2937',
         '&:hover': {
             backgroundColor: '#23424e',
         },
     })
+    const [dangNhap, setLogin] = useState(false)
+
+    // const userToken = localStorage.getItem('userToken')
+    if (dangNhap == true && isLogin == true) {
+        dispatch(getUserByEmail(formValue.email))
+        navigate('/')
+    }
+
     return (
         <>
 
@@ -213,12 +222,12 @@ export const Login = () => {
 
 
                                             dispatch(login(formValue))
-                                            dispatch(getUserByEmail(formValue.email))
-                                            setFormValue({
-                                                email: '',
-                                                password: '',
-                                            })
-                                            navigate('/')
+                                            // console.log(isLogin)
+                                            // handleLogin()
+                                            setLogin(true)
+                                            // console.log('userToken: ', userToken)
+                                            // navigate(PATH.HOME)
+
 
 
                                         }}

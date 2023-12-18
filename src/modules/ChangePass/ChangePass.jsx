@@ -4,16 +4,19 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Box, Button, Container, CssBaseline, Grid, Paper, TextField, Typography } from '@mui/material'
 import styled from '@emotion/styled'
 import { useDispatch } from 'react-redux';
+import { PATH } from '../../constants/paths';
 const ChangePass = () => {
     const [formValue, setFormValue] = useState({
         password: '',
+        newPassword: '',
 
 
     })
     console.log('formValue: ', formValue);
     // state validate form
     const [formError, setFormError] = useState({
-        email: '',
+        password: '',
+        newPassword: '',
     })
 
     const dispatch = useDispatch()
@@ -92,7 +95,7 @@ const ChangePass = () => {
                         borderRadius: '1rem'
                     }}
                 >
-                    
+
                     <Box
                         sx={{
                             paddingTop: 8,
@@ -150,7 +153,7 @@ const ChangePass = () => {
                                 >
 
                                     <Typography component="h1" variant="h5">
-                                    Đổi mật khẩu
+                                        Đổi mật khẩu
                                     </Typography>
                                     <Box
                                         component="form"
@@ -173,9 +176,10 @@ const ChangePass = () => {
 
                                             // dispatch(checkEmailToChangePass(formValue))
                                             setFormValue({
-                                                email: '',
+                                                password: '',
+                                                newPassword: '',
                                             })
-                                            navigate('/userProfile')
+                                            navigate(`${PATH.PROFILE}`)
 
 
                                         }}
