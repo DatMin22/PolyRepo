@@ -170,17 +170,15 @@ const postSlice = createSlice({
 
 
         })
-        builder.addCase(addComment.pending, (state) => {
-            // state.comment = payload
-            // state.isLoading = false
+        builder.addCase(addComment.pending, (state, { payload }) => {
 
 
         })
         builder.addCase(addComment.fulfilled, (state, { payload }) => {
             console.log('payload: ', payload);
-            // console.log('add comment thành công')
-            // state.commentListByPostIID.push(payload)
-            // state.isLoading = false
+            state.commentListByPostID.push(payload)
+
+            
 
 
         })

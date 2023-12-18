@@ -80,7 +80,7 @@ export const PostList = () => {
             post_id: post_Id,
             user_id: user_Id
         }))
-        document.getElementById('cmtList').click()
+        // document.getElementById('cmtList').click()
         setCommentContent('')
     }
     useEffect(() => {
