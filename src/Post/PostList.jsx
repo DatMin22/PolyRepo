@@ -21,10 +21,11 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Box, Button, Container, FormControlLabel, FormLabel, Grid, Modal, Stack, TextField } from '@mui/material'
+import { Box, Button, Container, FormControl, FormControlLabel, FormLabel, Grid, InputLabel, Link, MenuItem, Modal, Select, Stack, TextField } from '@mui/material'
 import { CustomButton } from '../Component/CustomButton/CustomButton'
 import { useNavigate } from 'react-router-dom'
 import { PATH } from '../constants/paths'
+import { getAllCategory } from '../store/Category/slice'
 
 export const PostList = () => {
     // * laasy currentUser tuwf localstorage
@@ -77,6 +78,7 @@ export const PostList = () => {
 
     const { postList, commentListByPostID, listGetPostById } = useSelector(state => state.post)
     const { userLogin, userIslogin } = useSelector(state => state.auth)
+    const { listCategory } = useSelector(state => state.category)
     const { likeByPostId, listLike, likePostNew, likeByUserId } = useSelector(state => state.like)
     const [postDetail, setPostDetail] = useState({})
     const [like, setLike] = useState(postDetail?.countlike)
@@ -109,13 +111,17 @@ export const PostList = () => {
     // })
     useEffect(() => {
         disPatch(getAllLike())
-        // disPatch(getLikeByUserId(userIslogin.id))
+        disPatch(getAllCategory())
 
 
 
 
     }, [])
+    const [category, setCategory] = useState();
 
+    const handleChange = (event) => {
+
+    };
 
     return (
         <>
@@ -135,12 +141,72 @@ export const PostList = () => {
                     }} className="w-75 py-3 px-4 text-dark" placeholder="Nhập tên dự án cần tìm..." />
             </Box>
             <div className="" style={{
-                margin: "5rem 0",
+                marginTop: '14rem',
+
                 width: '100%'
             }}>
+                <Box display={'flex'} justifyContent={'center'} mb={'3rem'}>
+                    <Stack width={'85%'} direction={'row'} spacing={5}>
+                        <Button variant='text' className='btn'
+                            sx={{
+                                cursor: 'pointer',
+                                color: '#23424e',
+                                ":hover": { scale: '1.2' }
+                            }}
+                            onClick={() => {
+                                setListPost(postList)
+                            }}
+                        >
+                            Tất cả
+                        </Button>
+                        {
+                            listCategory?.map((cate) => {
+                                return <Button variant='text' className='btn' key={cate.id} value={cate.id}
+                                    sx={{
+                                        cursor: 'pointer',
+                                        color: '#23424e',
+                                        ":hover": { scale: '1.2' }
+                                    }}
+                                    onClick={() => {
+                                        const listSearcByCate = postList.filter((post) => {
+                                            return post.categoryId == cate.id
+                                        });
+                                        setListPost(listSearcByCate)
+                                    }}
+                                >
+                                    {cate.name}
+                                </Button>;
+                            })
+                        }
 
+                    </Stack>
+                </Box>
+                {/* <FormControl sx={{ m: 1, minWidth: 400 }} >
+                    <InputLabel id="demo-simple-select-helper-label">Ngành</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-helper-label"
+                        id="demo-simple-select-helper"
+                        value={category}
+                        label="Ngành"
+                        onChange={(event) => {
+                            setCategory(event.target.value)
+                            const listSearcByCate = postList.filter((post) => {
+                                return post.categoryId == event.target.value
+                            });
+                            setListPost(listSearcByCate)
+                            // navigate(`${PATH.HOME}/${event.target.value}`)
+                        }}
+                    >
+                        {
+                            listCategory?.map((cate) => {
+                                return <MenuItem key={cate.id} value={cate.id}>{cate.name}</MenuItem>
+                            })
+                        }
+
+                    </Select>
+                </FormControl> */}
                 <Grid className='' style={{
-                    marginTop: '14rem'
+                    // marginTop: '14rem'
                 }}>
                     <Modal
                         open={open}

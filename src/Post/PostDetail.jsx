@@ -304,7 +304,7 @@ export const PostDetail = () => {
                                     }}>
                                     <i className='bx bx-recycle'></i></span>
                                 <div className="d-flex align-items-center justify-content-between">
-                                    <span className='h4'>Bạn nghĩ gì?</span>
+                                    <span className='h4'>Bạn đang nghĩ gì?</span>
 
                                 </div>
                                 <div className="d-flex align-items-center justify-content-between">
