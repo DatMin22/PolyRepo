@@ -139,6 +139,10 @@ ul > li {
   border: none;
   outline: none;
 }
-.btnUploadPost{
+.btnUploadPost {
   color: #000;
+}
+
+#searchInput:focus {
+outline: none;
 }
