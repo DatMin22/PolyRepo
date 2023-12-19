@@ -54,7 +54,7 @@ export const deleteLikeById = createAsyncThunk("deleteLikeById", async (id) => {
             `http://localhost:8080/like/delete/${id}`,
         )
         console.log("response delete like: ", response)
-        // return response.data.data//
+        return id
     } catch (error) {
         // throw (error)
         console.log("error", error);
@@ -105,6 +105,9 @@ const likeSlice = createSlice({
         builder.addCase(deleteLikeById.fulfilled, (state, { payload }) => {
             console.log('deleteLikeById: ', payload);
             // state.isLiked = true;
+            state.listLike = state.listLike.filter((like) => {
+                return like.id !== payload
+            })
 
         })
 

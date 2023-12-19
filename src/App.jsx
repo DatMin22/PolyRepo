@@ -26,6 +26,7 @@ import ChangePass from './modules/ChangePass/ChangePass'
 import { PATH } from './constants/paths'
 import { EditUserProfile } from './modules/UserProfile/EditUserProfile'
 import { UserProfile } from './modules/UserProfile/UserProfile'
+import { PostDetail } from './Post/PostDetail'
 function App() {
 
   // login()
@@ -57,6 +58,7 @@ function App() {
           {/* <Route path={`${PATH.PROFILE}/:username`} element={<UserProfile />} /> */}
           <Route path={PATH.EDIT_PROFILE} element={<EditUserProfile />} />
           <Route path={PATH.PROFILE} element={<UserProfile />} />
+          <Route path={PATH.POST_DETAIL} element={<PostDetail />} />
 
 
 

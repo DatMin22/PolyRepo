@@ -44,10 +44,10 @@ function a11yProps(index) {
 
 export const UserProfile = () => {
     const { listShareByUser } = useSelector((state) => state.share)
-    const { listGetPostById } = useSelector((state) => state.post)
+    const { PostById } = useSelector((state) => state.post)
     const [shareDetail, setShareDetail] = useState({})
     console.log('listShareByUser: ', listShareByUser)
-    console.log('listGetPostById: ', listGetPostById)
+    console.log('listGetPostById: ', PostById)
     const [currentUser, setCurrentUser] = useState(() => {
         return localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null
     })
@@ -145,15 +145,15 @@ export const UserProfile = () => {
                         })
                     }
                     <Box className="postList" sx={{}}>
-                        <div className="postItem" key={listGetPostById?.id}
+                        <div className="postItem" key={PostById?.id}
                             data-modal-target="postDetail-modal" data-modal-toggle="postDetail-modal"
                             onClick={() => {
 
                             }}
                         >
-                            <img src={listGetPostById?.filename} className='card-img-top' alt="" />
+                            <img src={PostById?.filename} className='card-img-top' alt="" />
                             <div className="card-body">
-                                <h1 className="card-title" style={{ fontSize: '1.4rem' }}>{listGetPostById?.title}</h1>
+                                <h1 className="card-title" style={{ fontSize: '1.4rem' }}>{PostById?.title}</h1>
                             </div>
                         </div>
                     </Box>

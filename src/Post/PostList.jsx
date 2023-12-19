@@ -23,6 +23,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Box, Button, Container, FormControlLabel, FormLabel, Grid, Modal, Stack, TextField } from '@mui/material'
 import { CustomButton } from '../Component/CustomButton/CustomButton'
+import { useNavigate } from 'react-router-dom'
+import { PATH } from '../constants/paths'
 
 export const PostList = () => {
     // * laasy currentUser tuwf localstorage
@@ -46,9 +48,9 @@ export const PostList = () => {
         width: '800px'
     }
 
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const [open, setOpen] = useState(false)
+    const handleOpen = () => setOpen(true)
+    const handleClose = () => setOpen(false)
 
     const ExpandMore = styled((props) => {
         const { expand, ...other } = props;
@@ -77,11 +79,14 @@ export const PostList = () => {
     const { userLogin, userIslogin } = useSelector(state => state.auth)
     const { likeByPostId, listLike, likePostNew, likeByUserId } = useSelector(state => state.like)
     const [postDetail, setPostDetail] = useState({})
+    const [like, setLike] = useState(postDetail?.countlike)
+    console.log('like: ', like)
     const [listPost, setListPost] = useState(postList)
     const [commentContent, setCommentContent] = useState('')
     // let user_Id = currentUser?.id
     // let post_Id = postDetail?.id
     const disPatch = useDispatch()
+    const navigate = useNavigate()
     const handleComment = () => {
         if (currentUser !== null) {
             disPatch(addComment({
@@ -202,6 +207,7 @@ export const PostList = () => {
                                                     disPatch(getAllLike())
                                                     var element = document.querySelector(".heart")
                                                     element.classList.remove("isliked")
+
                                                 } else {
                                                     disPatch(
                                                         likePost({
@@ -238,6 +244,7 @@ export const PostList = () => {
                                                     disPatch(getAllLike())
                                                     var element = document.querySelector(".heart")
                                                     element.classList.remove("isliked")
+                                                    // setLike(postDetail?.countlike - 1)
                                                 } else {
                                                     disPatch(
                                                         likePost({
@@ -259,7 +266,7 @@ export const PostList = () => {
                                     )
                                 }
 
-                                <span>{postDetail?.countlike}</span>
+                                {like == undefined ? (<span>{postDetail?.countlike}</span>) : (<span>{like}</span>)}
                                 <IconButton aria-label="share" onClick={() => {
                                     alert('share nè')
                                 }}>
@@ -382,7 +389,8 @@ export const PostList = () => {
                                     disPatch(getCommentByPostID(post.id))
                                     disPatch(getLikeByPostId(post.id))
                                     disPatch(getPostById(post.id))
-                                    handleOpen()
+                                    navigate(`${PATH.POST_DETAIL}`)
+                                    // handleOpen()
                                 }}
                             >
                                 <img src={post.filename} className='card-img-top' alt="" />

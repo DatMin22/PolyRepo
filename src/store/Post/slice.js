@@ -9,7 +9,7 @@ const initialState = {
     commentListByPostID: [],
     fileUpload: '',
     postEdit: undefined,
-    listGetPostById: {},
+    PostById: {},
     listPostByUserId: []
 }
 
@@ -178,7 +178,7 @@ const postSlice = createSlice({
             console.log('payload: ', payload);
             state.commentListByPostID.push(payload)
 
-            
+
 
 
         })
@@ -201,7 +201,7 @@ const postSlice = createSlice({
         // *getPostById
         builder.addCase(getPostById.fulfilled, (state, { payload }) => {
             console.log('payload: ', payload);
-            state.listGetPostById = payload
+            state.PostById = payload
 
 
         })
