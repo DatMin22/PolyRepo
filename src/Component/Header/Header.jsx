@@ -60,7 +60,17 @@ export const Header = () => {
         // setCurrentUser(JSON.parse(localStorage.getItem('currentUser')))
     }, [currentUser])
 
-    const pages = ['Products', 'Pricing', 'Blog'];
+    const pages = [
+        <Link
+        className='btnUploadPost'
+            sx={{
+                cursor: 'pointer',
+            }}
+            to={'uploadPost'}
+            style={{ display: isLogin ? "block" : "none",  }}>
+            Tải lên
+        </Link>
+    ]
     const settings =
         [
             <Link to={'/'} style={{ color: '#000', textAlign: 'center' }}>

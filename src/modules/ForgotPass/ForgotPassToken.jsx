@@ -8,9 +8,13 @@ import { Link, useNavigate } from 'react-router-dom'
 
 import { Box, Button, Container, CssBaseline, Grid, Paper, TextField, Typography } from '@mui/material'
 import styled from '@emotion/styled'
+import { passwordChange } from '../../store/ForgotPass/slice'
+import { PATH } from '../../constants/paths'
 export const ForgotPassToken = () => {
+    const { confirmCode, data } = useSelector((state) => state.forgotPass)
+
     const [formValue, setFormValue] = useState({
-        token: "",
+        token: confirmCode,
         newPassword: ""
 
 
@@ -85,7 +89,10 @@ export const ForgotPassToken = () => {
     // }
     //     , [userEdit])
     const navigate = useNavigate()
-
+    if (data !== undefined) {
+        alert('đổi mk thành công')
+        navigate(`/${PATH.SIGNIN}`)
+    }
     //*********************** */
     const CustomButton = styled(Button)({
         backgroundColor: '#1F2937',
@@ -188,12 +195,13 @@ export const ForgotPassToken = () => {
                                             }
 
 
-                                            // dispatch(checkEmailToChangePass(formValue))
+                                            dispatch(passwordChange(formValue))
                                             setFormValue({
                                                 token: "",
                                                 newPassword: ""
                                             })
-                                            navigate('/sign-in')
+
+
 
 
                                         }}
@@ -212,6 +220,7 @@ export const ForgotPassToken = () => {
                                             onChange={
                                                 handleFormValue('token')
                                             }
+                                            value={confirmCode}
                                             onBlur={
                                                 handleFormValue('token')
                                             }

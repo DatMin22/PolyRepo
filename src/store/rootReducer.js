@@ -5,6 +5,8 @@ import { postReducer } from './Post/slice'
 import { categoryReducer } from './Category/slice'
 import { likeReducer } from './Like/slice'
 import { forgotPassReducer } from './ForgotPass/slice'
+import { changePassReducer } from './ChangePass/slice'
+import { shareReducer } from './Share/slice'
 
 export const rootReducer = combineReducers({
     // demoRedux: demoReduxReducer,
@@ -16,7 +18,9 @@ export const rootReducer = combineReducers({
     post: postReducer,
     category: categoryReducer,
     like: likeReducer,
-    forgotPass: forgotPassReducer
+    forgotPass: forgotPassReducer,
+    changePassword:changePassReducer,
+    share:shareReducer
 })
 
 

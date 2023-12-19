@@ -98,10 +98,10 @@ export const HeaderAdmin = () => {
             }}>
                 Quản trị
             </Link >,
-            <Link to={PATH.PROFILE} style={{ color: '#000', textAlign: 'center' }}>
+            <Link to={`/${PATH.PROFILE}`} style={{ color: '#000', textAlign: 'center' }}>
                 Tài khoản
             </Link>,
-            <Link to={'/changePass'} style={{ color: '#000', textAlign: 'center' }}>
+            <Link to={`/${PATH.CHANGE_PASSWORD}`} style={{ color: '#000', textAlign: 'center' }}>
                 Đổi mật khẩu
             </Link>,
 

@@ -4,7 +4,9 @@ import axios from "axios"
 
 
 const initialState = {
-    message: ''
+    message: '',
+    confirmCode: null,
+    data: undefined
 }
 
 const baseURL = 'http://localhost:8080'
@@ -14,19 +16,45 @@ export const checkEmailToChangePass = createAsyncThunk("checkEmailToChangePass",
         const response = await axios.post(
             `${baseURL}/password/reset`,
             email,
-            // {
-            //     headers: { 'content-type': 'application/json' }
-            // }
+            {
+                headers: {
+                    'content-type': 'application/json',
+
+                },
+
+
+            },
+
         )
         console.log('response: ', response);
-        // return response.data.statusCode
-        // alert('Đăng nhập thành công.')
-        // getUserByEmail(data.email)
-        // console.log("response checkEmailToChangePass", response.data.statusCode)
-        // return response.data.data
+
+        return response.data.data
     } catch (error) {
-        throw(error) 
         console.log("error", error);
+        throw (error)
+    }
+})
+export const passwordChange = createAsyncThunk("passwordChange", async (payload) => {
+    try {
+        const response = await axios.post(
+            `${baseURL}/password/change`,
+            payload,
+            {
+                headers: {
+                    'content-type': 'application/json',
+
+                },
+
+
+            },
+
+        )
+        console.log('response: ', response);
+
+        return response
+    } catch (error) {
+        console.log("error", error);
+        throw (error)
     }
 })
 
@@ -38,25 +66,7 @@ const forgotPassSlice = createSlice({
 
 
 
-        login(state, { payload }) {
-            apiServices.post(
-                '/signin',
-                payload
-            )
-                .then((res) => {
-                    console.log('res: ', res.data.data);
 
-                    alert('Đăng nhập thành công.')
-                    // state.isLogin = true
-
-                })
-
-                .catch((error) => {
-                    console.log('error: ', error);
-                    alert("Đã có lỗi xảy ra. Đăng nhập thất bại")
-
-                })
-        },
 
 
     },
@@ -67,14 +77,22 @@ const forgotPassSlice = createSlice({
         builder.addCase(checkEmailToChangePass.fulfilled, (state, { payload }) => {
             console.log('payload: ', payload);
 
-            state.message = payload
+            state.confirmCode = payload.token
             alert(payload)
-
-
 
         })
         builder.addCase(checkEmailToChangePass.rejected, (state) => {
             alert("lỗi");
+            return
+        })
+        builder.addCase(passwordChange.fulfilled, (state, { payload }) => {
+            console.log('payload: ', payload);
+            state.data = payload
+
+        })
+        builder.addCase(passwordChange.rejected, (state) => {
+            alert("lỗi");
+            return
         })
 
 

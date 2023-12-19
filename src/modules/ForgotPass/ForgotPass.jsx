@@ -9,6 +9,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Box, Button, Container, CssBaseline, Grid, Paper, TextField, Typography } from '@mui/material'
 import styled from '@emotion/styled'
 import { PATH } from '../../constants/paths'
+import { confirmEmail } from '../../Services/apiServices'
 
 export const ForgotPass = () => {
     const [formValue, setFormValue] = useState({
@@ -16,6 +17,8 @@ export const ForgotPass = () => {
 
 
     })
+    const navigate = useNavigate()
+
     console.log('formValue: ', formValue);
     // state validate form
     const [formError, setFormError] = useState({
@@ -23,7 +26,12 @@ export const ForgotPass = () => {
     })
 
     const dispatch = useDispatch()
-    // const { userEdit } = useSelector((state) => state.admin)
+    const { confirmCode } = useSelector((state) => state.forgotPass)
+    console.log('confirmCode: ', confirmCode)
+    if (confirmCode !== null) {
+        navigate(PATH.FORGET_CHANGE_PASSWORD)
+
+    }
     // validate
     const validate = (name, value) => {
         switch (name) {
@@ -72,8 +80,7 @@ export const ForgotPass = () => {
         })
     }
 
-    const navigate = useNavigate()
-    
+
 
 
 
@@ -123,7 +130,7 @@ export const ForgotPass = () => {
                                     backgroundSize: "cover",
                                     backgroundPosition: "center",
                                     borderRadius: '1rem',
-                                    height:400
+                                    height: 400
 
                                 }}
 
@@ -172,11 +179,11 @@ export const ForgotPass = () => {
                                             // }
 
 
-                                            // dispatch(checkEmailToChangePass(formValue))
+                                            // confirmEmail(formValue)
+                                            dispatch(checkEmailToChangePass(formValue))
                                             setFormValue({
                                                 email: '',
                                             })
-                                            navigate(PATH.FORGET_CHANGE_PASSWORD)
 
 
                                         }}
@@ -248,7 +255,7 @@ export const ForgotPass = () => {
                     </svg>
                 </div>
             </div>
-            
+
         </>
     )
 }

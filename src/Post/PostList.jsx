@@ -68,21 +68,29 @@ export const PostList = () => {
     const { likeByPostId, listLike, likePostNew, likeByUserId } = useSelector(state => state.like)
     const [postDetail, setPostDetail] = useState({})
     const [commentContent, setCommentContent] = useState('')
-    let user_Id = currentUser?.id
-    let post_Id = postDetail?.id
+    // let user_Id = currentUser?.id
+    // let post_Id = postDetail?.id
     const disPatch = useDispatch()
     const handleComment = () => {
+        if (currentUser !== null) {
+            disPatch(addComment({
+                content: commentContent,
+                commentstatus: "true",
+                post_id: postDetail?.id,
+                user_id: currentUser?.id
+            }))
+            // document.getElementById('cmtList').click()
+            setCommentContent('')
+        }
 
 
-        disPatch(addComment({
-            content: commentContent,
-            commentstatus: "true",
-            post_id: post_Id,
-            user_id: user_Id
-        }))
-        // document.getElementById('cmtList').click()
-        setCommentContent('')
     }
+    const CustomButton = styled(Button)({
+        backgroundColor: '#1F2937',
+        '&:hover': {
+            backgroundColor: '#23424e',
+        },
+    })
     useEffect(() => {
         disPatch(getAllLike())
         // disPatch(getLikeByUserId(userIslogin.id))
@@ -117,7 +125,7 @@ export const PostList = () => {
                                 <CardMedia
                                     component="img"
                                     height="194"
-                                    image={"./images/" + postDetail.filename}
+                                    image={postDetail.filename}
                                     alt={postDetail.filename}
                                     sx={{
 
@@ -147,43 +155,86 @@ export const PostList = () => {
                             </Stack>
                         </Stack>
                         <CardActions disableSpacing>
-                            <IconButton aria-label="add to favorites"
-                                className={
-                                    classnames('heart', {
-                                        isliked: listLike?.find((like) => like?.user_id === currentUser?.id && like?.post_id === postDetail?.id),
-                                        // unlike: listLike.find((like) => like.user_id !== userIslogin.id && like.post_id !== postDetail.id),
+                            {
+                                currentUser !== null ? (
+                                    <IconButton aria-label="add to favorites"
+                                        className={
+                                            classnames('heart', {
+                                                isliked: listLike?.find((like) => like?.user_id === currentUser?.id && like?.post_id === postDetail?.id),
+                                                // unlike: listLike.find((like) => like.user_id !== userIslogin.id && like.post_id !== postDetail.id),
 
-                                    })}
-                                onClick={() => {
-                                    const like = listLike?.find((like) => like?.user_id === currentUser?.id && like?.post_id === postDetail?.id)
-                                    console.log('like: ', like?.id)
+                                            })}
+                                        onClick={() => {
+                                            const like = listLike?.find((like) => like?.user_id === currentUser?.id && like?.post_id === postDetail?.id)
+                                            console.log('like: ', like?.id)
 
-                                    // handleLike()
-                                    if (like !== undefined) {
-                                        disPatch(deleteLikeById(like.id))
-                                        disPatch(getAllLike())
-                                        var element = document.querySelector(".heart")
-                                        element.classList.remove("isliked")
-                                    } else {
-                                        disPatch(
-                                            likePost({
-                                                likeStatus: 'True',
-                                                post_id: postDetail?.id,
-                                                user_id: currentUser?.id,
+                                            // handleLike()
+                                            if (like !== undefined) {
+                                                disPatch(deleteLikeById(like.id))
+                                                disPatch(getAllLike())
+                                                var element = document.querySelector(".heart")
+                                                element.classList.remove("isliked")
+                                            } else {
+                                                disPatch(
+                                                    likePost({
+                                                        likeStatus: 'True',
+                                                        post_id: postDetail?.id,
+                                                        user_id: currentUser?.id,
 
-                                            }))
-                                        disPatch(getAllLike())
+                                                    }))
+                                                disPatch(getAllLike())
 
-                                    }
-                                    console.log('like: ', like)
+                                            }
+                                            console.log('like: ', like)
 
 
-                                }}
-                            >
-                                <FavoriteIcon />
-                            </IconButton>
+                                        }}
+                                    >
+                                        <FavoriteIcon />
+                                    </IconButton>
+                                ) : (
+                                    <IconButton aria-label="add to favorites" disabled
+                                        className={
+                                            classnames('heart', {
+                                                isliked: listLike?.find((like) => like?.user_id === currentUser?.id && like?.post_id === postDetail?.id),
+                                                // unlike: listLike.find((like) => like.user_id !== userIslogin.id && like.post_id !== postDetail.id),
+
+                                            })}
+                                        onClick={() => {
+                                            const like = listLike?.find((like) => like?.user_id === currentUser?.id && like?.post_id === postDetail?.id)
+                                            console.log('like: ', like?.id)
+
+                                            // handleLike()
+                                            if (like !== undefined) {
+                                                disPatch(deleteLikeById(like.id))
+                                                disPatch(getAllLike())
+                                                var element = document.querySelector(".heart")
+                                                element.classList.remove("isliked")
+                                            } else {
+                                                disPatch(
+                                                    likePost({
+                                                        likeStatus: 'True',
+                                                        post_id: postDetail?.id,
+                                                        user_id: currentUser?.id,
+
+                                                    }))
+                                                disPatch(getAllLike())
+
+                                            }
+                                            console.log('like: ', like)
+
+
+                                        }}
+                                    >
+                                        <FavoriteIcon />
+                                    </IconButton>
+                                )
+                            }
+
                             <span>{postDetail?.countlike}</span>
-                            <IconButton aria-label="share">
+                            <IconButton aria-label="share" onClick={() => {
+                                alert('share nè')
+                            }}>
                                 <ShareIcon />
                             </IconButton>
                             <span className='' id='cmtList'
@@ -207,9 +258,9 @@ export const PostList = () => {
                                     <div className='commentList'>
 
                                         {
-                                            commentListByPostID.map((comment) => {
+                                            commentListByPostID?.map((comment) => {
                                                 return (
-                                                    <div key={comment.id}
+                                                    <div key={comment?.id}
                                                         className='d-flex mt-3'
                                                     >
                                                         <p>
@@ -217,7 +268,7 @@ export const PostList = () => {
                                                                 fontWeight: 'bolder',
                                                                 marginRight: '1rem',
                                                                 verticalAlign: 'middle'
-                                                            }}>Người dùng {comment.user_id}</span>
+                                                            }}>Người dùng {comment?.user_id}</span>
                                                         </p>
                                                         <p
                                                             style={{
@@ -229,7 +280,7 @@ export const PostList = () => {
                                                                 fontSize: '1rem',
                                                                 fontWeight: '300',
                                                             }}>
-                                                            <span className='ms-2 mt-3'>{comment.content}</span>
+                                                            <span className='ms-2 mt-3'>{comment?.content}</span>
 
                                                         </p>
                                                     </div>
@@ -262,15 +313,30 @@ export const PostList = () => {
                                             }}
                                             value={commentContent}
                                             placeholder='Thêm nhận xét' />
-                                        <button className='btn btn-comment'
-                                            style={{
-                                                borderRadius: '1rem',
-                                            }}
-                                            onClick={
-                                                handleComment
+                                        {
+                                            currentUser !== null ? (
+                                                <CustomButton variant='contained' className='btn btn-comment'
+                                                    style={{
+                                                        borderRadius: '1rem',
+                                                    }}
+                                                    onClick={
+                                                        handleComment
 
 
-                                            }>Bình luận</button>
+                                                    }>Bình luận</CustomButton>
+                                            ) : (
+                                                <CustomButton variant='contained' className='btn btn-comment'
+                                                    style={{
+                                                        borderRadius: '1rem',
+                                                    }}
+                                                    onClick={
+                                                        handleComment
+                                                    }
+                                                    disabled
+                                                    title='Đăng nhập để bình luận'
+                                                >Bình luận</CustomButton>
+                                            )
+                                        }
                                     </div>
                                 </div>
                             </CardContent>

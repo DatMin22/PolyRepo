@@ -1,13 +1,35 @@
 import React from 'react'
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { Box, Button, Container, CssBaseline, Grid, Paper, TextField, Typography } from '@mui/material'
 import styled from '@emotion/styled'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { PATH } from '../../constants/paths';
+import { changePassword } from '../../store/ChangePass/slice';
+import animationSuccess from '../../Lotties/animationSuccess.json'
+import Lottie from 'react-lottie';
+// *Loading
+const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationSuccess,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 const ChangePass = () => {
+    const { isLogin, userLogin, userIslogin } = useSelector(state => state.auth)
+
+    const [currentUser, setCurrentUser] = useState(() => {
+        return localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null
+
+    })
+    if (currentUser == null || isLogin == false) {
+        return <Navigate to={`${PATH.SIGNIN}`} />
+    }
+
     const [formValue, setFormValue] = useState({
-        password: '',
+        currentPassword: '',
         newPassword: '',
 
 
@@ -15,12 +37,13 @@ const ChangePass = () => {
     console.log('formValue: ', formValue);
     // state validate form
     const [formError, setFormError] = useState({
-        password: '',
+        currentPassword: '',
         newPassword: '',
     })
 
     const dispatch = useDispatch()
-    // const { userEdit } = useSelector((state) => state.admin)
+    const { statusCode } = useSelector((state) => state.changePassword)
+    console.log('statusCode: ', statusCode)
     // validate
     const validate = (name, value) => {
         switch (name) {
@@ -70,9 +93,12 @@ const ChangePass = () => {
     }
 
     const navigate = useNavigate()
+    const [code, setCode] = useState(statusCode)
 
-
-
+    // if (code == 200) {
+    //     // setCode('')
+    //     return <Navigate to={`/${PATH.PROFILE}`} />
+    // }
 
     //*********************** */
     const CustomButton = styled(Button)({
@@ -151,10 +177,20 @@ const ChangePass = () => {
                                         alignItems: "center",
                                     }}
                                 >
-
                                     <Typography component="h1" variant="h5">
                                         Đổi mật khẩu
                                     </Typography>
+
+                                    <div>
+                                        {code == 200 ?
+                                            (<>
+                                                <Lottie options={defaultOptions} width={100} height={100} /> <span>Thành công!</span>
+                                                {/* {setCode('')} */}
+                                                {/* {navigate(`/${PATH.PROFILE}`)} */}
+                                            </>)
+                                            :
+                                            ('')}
+                                    </div>
                                     <Box
                                         component="form"
                                         noValidate
@@ -174,12 +210,14 @@ const ChangePass = () => {
                                             // }
 
 
-                                            // dispatch(checkEmailToChangePass(formValue))
+                                            dispatch(changePassword(formValue))
                                             setFormValue({
-                                                password: '',
+                                                currentPassword: '',
                                                 newPassword: '',
                                             })
-                                            navigate(`${PATH.PROFILE}`)
+
+
+                                            // navigate(`/${PATH.PROFILE}`)
 
 
                                         }}
@@ -187,22 +225,25 @@ const ChangePass = () => {
                                         sx={{ mt: 1 }}
                                     >
                                         <TextField
+                                            type='password'
                                             margin="normal"
                                             required
                                             fullWidth
-                                            id="oldPassword"
+                                            id="currentPassword"
                                             label="Mật khẩu hiện tại"
-                                            name="oldPassword"
-                                            autoComplete="oldPassword"
+                                            name="currentPassword"
+                                            autoComplete="currentPassword"
                                             autoFocus
                                             onChange={
-                                                handleFormValue('oldPassword')
+                                                handleFormValue('currentPassword')
                                             }
                                             onBlur={
-                                                handleFormValue('oldPassword')
+                                                handleFormValue('currentPassword')
                                             }
                                         />
                                         <TextField
+                                            type='password'
+
                                             margin="normal"
                                             required
                                             fullWidth
@@ -210,7 +251,6 @@ const ChangePass = () => {
                                             label="Mật khẩu mới"
                                             name="newPassword"
                                             autoComplete="newPassword"
-                                            autoFocus
                                             onChange={
                                                 handleFormValue('newPassword')
                                             }

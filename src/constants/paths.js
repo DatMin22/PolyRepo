@@ -3,7 +3,7 @@ export const PATH = {
     SIGNIN: '/sign-in',
     SIGNUP: '/sign-up',
     CONFIRM_EMAIL: '/confirm-email',
-    FORGET_CHANGE_PASSWORD: '/forgot-change-password',
+FORGET_CHANGE_PASSWORD: '/forgot-change-password',
     CHANGE_PASSWORD: '/change-password',
     DASHBOARD: '/admin',
     EDIT_PROFILE: 'editProfile',
